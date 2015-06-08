@@ -17,6 +17,12 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
+if [ ! -f $ZOO_CFG_FILE ]
+then
+        echo "Error: $ZOO_CFG_FILE not found. Have you started zookeeper?"
+        exit
+fi
+
 if [ "A$1" == "A" -o "A$2" == "A" -o "A$3" == "A" ]
 then
         echo "Usage: $0 [upconfig|downconfig] collection_name /solrcloud/collection/config/path"

@@ -77,6 +77,6 @@ echo "${zkhost}" > $ZKHOST_CFG_FILE
 cat $ZOO_CFG_FILE | docker exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZOO_CFG_FILE
 
 # Write the config to the config container
-echo "Waiting for zookeeper startup..."
+echo "Waiting for zookeeper startup... ${zkhost}"
 sleep 3
-
+echo "Done."
