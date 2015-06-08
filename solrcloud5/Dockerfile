@@ -2,7 +2,7 @@ FROM freedev/java
 
 MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 
-ADD http://mirror.nohup.it/apache/lucene/solr/5.2.0/solr-5.2.0.tgz /opt/solr-5.2.0.tgz
+ADD http://it.apache.contactlab.it/lucene/solr/5.2.0/solr-5.2.0.tgz /opt/solr-5.2.0.tgz
 
 RUN cd /opt && tar xzf /opt/solr-5.2.0.tgz
 
