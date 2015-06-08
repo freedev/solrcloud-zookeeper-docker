@@ -1,0 +1,37 @@
+<?xml version="1.0" encoding="UTF-8"?>
+
+<configuration debug="true" scan="true" scanPeriod="60 seconds">
+ <contextListener class="ch.qos.logback.classic.jul.LevelChangePropagator">
+	<resetJUL>true</resetJUL>
+ </contextListener>
+
+  <appender name="LOGFILE" class="ch.qos.logback.core.FileAppender">
+    <file>${catalina.base}/logs/tomcat.log</file>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <appender name="SOLR" class="ch.qos.logback.core.FileAppender">
+    <file>${solr.log}/solr.log</file>
+    <filter class="ch.qos.logback.access.filter.CountingFilter">
+        <name>solrLogCountingFilter</name>
+    </filter>
+    <encoder>
+      <pattern>%d{HH:mm:ss.SSS} [%thread] %-5level %logger{36} - %msg%n</pattern>
+    </encoder>
+  </appender>
+
+  <logger name="org.apache.catalina.core.ContainerBase.[Catalina].[localhost]" level="INFO" additivity="false">
+     <appender-ref ref="LOGFILE" />
+  </logger>
+  <logger name="catalina.org.apache.juli" level="INFO" additivity="false">
+     <appender-ref ref="LOGFILE" />
+  </logger>
+
+  <logger name="org.apache.solr" level="INFO" additivity="false">
+    <appender-ref ref="SOLR" />
+  </logger>
+
+</configuration>
+
