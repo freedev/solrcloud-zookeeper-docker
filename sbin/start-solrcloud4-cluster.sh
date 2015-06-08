@@ -26,10 +26,3 @@ export container_name="solrcloud4"
 
 $SZD_HOME/sbin/start-tomcat-cluster.sh
 
-for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
-
-  SOLR_PORT=$((SOLR_PORT+1))
-
-  SOLR_HOSTNAME=${HOST_PREFIX}${i}
-
-done
