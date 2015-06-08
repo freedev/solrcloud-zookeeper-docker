@@ -22,7 +22,9 @@ then
         exit
 fi
 
-. $SZD_HOME/sbin/start-tomcat-cluster.sh
+export container_name="solrcloud4"
+
+$SZD_HOME/sbin/start-tomcat-cluster.sh
 
 for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 

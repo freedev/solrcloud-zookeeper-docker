@@ -1,7 +1,11 @@
 #!/bin/bash
 
 set -e
-container_name=solr-tomcat
+
+if [ -z "$container_name" ]
+then
+	container_name=solr-tomcat
+fi
 
 IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
@@ -62,7 +66,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-v "$HOST_DATA_DIR/store:/store" \
 	-p ${SOLR_PORT}:8080 \
 	--name "${SOLR_HOSTNAME}" \
-	freedev/solr-tomcat
+	freedev/${container_name}
 
 done
 
