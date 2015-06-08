@@ -3,6 +3,9 @@
 set -e
 container_name=solrcloud5
 
+#SOLR_HEAP=""
+#SOLR_JAVA_MEM="-Xms512m -Xmx2048m"
+
 IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
     echo "${container_name} image not found... Did you run 'build-images.sh' ?"
@@ -59,7 +62,8 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-e ZKHOST=${ZKHOST} \
 	-e SOLR_PORT=8080 -p ${SOLR_PORT}:8080 \
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" --name "${SOLR_HOSTNAME}" \
-	-e SOLR_JAVA_MEM="-Xms512m -Xmx2048m" \
+	-e SOLR_HEAP="$SOLR_HEAP" \
+	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
 	freedev/solrcloud5
 done
 

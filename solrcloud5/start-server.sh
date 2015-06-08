@@ -20,4 +20,6 @@ then
 	echo "ERROR: " $SOLR_DATA/solr.xml " missing..." 
 fi
 
+echo "SOLR_HEAP=\"$SOLR_HEAP\"" >> /opt/solr/bin/solr.in.sh
+
 /opt/solr/bin/solr start -f -c -p $SOLR_PORT -z $ZKHOST -s $SOLR_DATA >> $SOLR_LOG_DIR/solr-console.log 2>&1
