@@ -16,7 +16,10 @@ then
         exit
 fi
 
-echo "Warning: this script will stop all running containers "
+echo ""
+echo "Warning: this script will stop and remove all containers running."
+echo "If removing step doesn't start after stop, wait few seconds and try again..."
+echo " "
 select yn in "Stop_All" "Exit"; do
     case $yn in
         Stop_All ) break;;
@@ -24,8 +27,14 @@ select yn in "Stop_All" "Exit"; do
     esac
 done
 
-docker ps -q | xargs -I{} docker exec -i {} /stop-server.sh
+echo "..."
+echo "Stopping..."
+docker ps -q | xargs -I{} docker exec -i "{}" /stop-server.sh
+echo "Done"
 sleep 2
+echo "..."
+echo "Removing..."
+
 docker ps -a -q | xargs -I{} docker rm {}
 
 if [ -f $ZOO_CFG_FILE ]
@@ -38,3 +47,4 @@ then
 	rm $ZKHOST_CFG_FILE
 fi
 
+echo Done
