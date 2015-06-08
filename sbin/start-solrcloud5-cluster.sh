@@ -34,8 +34,10 @@ fi
 
 # Start the solrcloud containers
 SOLR_PORT=8080
-HOST_PREFIX=solrcloud5_
+HOST_PREFIX=solrcloud5-
 ZKHOST=$(cat $ZKHOST_CFG_FILE)
+HOSTS_CLUSTER='
+'
 
 for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 
@@ -60,10 +62,23 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-e SOLR_DATA=/store/solr \
 	-e SOLR_LOG_DIR=/opt/logs \
 	-e ZKHOST=${ZKHOST} \
-	-e SOLR_PORT=8080 -p ${SOLR_PORT}:8080 \
+	-e SOLR_PORT=${SOLR_PORT} -p ${SOLR_PORT}:${SOLR_PORT} \
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" --name "${SOLR_HOSTNAME}" \
 	-e SOLR_HEAP="$SOLR_HEAP" \
 	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
 	freedev/solrcloud5
+
+  container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
+  line="${container_ip} ${SOLR_HOSTNAME}"
+  HOSTS_CLUSTER="${HOSTS_CLUSTER}"$'\n'"${line}"$'\n'
+
+done
+
+echo "SolrCloud cluster ready:"
+echo ${HOSTS_CLUSTER}
+
+for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
+    SOLR_HOSTNAME=${HOST_PREFIX}${i}
+    echo "${HOSTS_CLUSTER}" | docker exec -i ${SOLR_HOSTNAME} bash -c 'cat > /opt/config/hosts.cluster'
 done
 

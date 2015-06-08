@@ -22,4 +22,18 @@ fi
 
 echo "SOLR_HEAP=\"$SOLR_HEAP\"" >> /opt/solr/bin/solr.in.sh
 
-/opt/solr/bin/solr start -f -c -p $SOLR_PORT -z $ZKHOST -s $SOLR_DATA >> $SOLR_LOG_DIR/solr-console.log 2>&1
+cp /etc/hosts /opt/config/hosts
+
+echo 'Waiting for hosts file to appear...'
+while [ ! -f /opt/config/hosts.cluster ] ; do
+	sleep 1
+done
+echo 'hosts file found, starting server.'
+cat /opt/config/hosts /opt/config/hosts.cluster > /etc/hosts
+rm /opt/config/hosts.cluster
+
+if [ -z ${SERVER_JVMFLAGS} ] ; then
+  export SERVER_JVMFLAGS=" -Xmx1g -Dzookeeper.serverCnxnFactory=org.apache.zookeeper.server.NettyServerCnxnFactory"
+fi
+
+exec /opt/solr/bin/solr start -f -c -p $SOLR_PORT -z $ZKHOST -s $SOLR_DATA -h $SOLR_HOSTNAME -DhostPort=$SOLR_PORT >> $SOLR_LOG_DIR/solr-console.log 2>&1
