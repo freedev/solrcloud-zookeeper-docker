@@ -18,7 +18,7 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-if [ "A$COMMON_CONFIG" == "A" ]
+if [ "A$SZD_COMMON_CONFIG" == "A" ]
 then
         echo "Error: common.sh not loaded"
         exit
@@ -29,7 +29,7 @@ conf_container=zookeeper
 
 # Start the zookeeper container
 
-HOST_DATA="$COMMON_DATA_DIR/${conf_container}"
+HOST_DATA="$SZD_COMMON_DATA_DIR/${conf_container}"
 if [ ! -d ${HOST_DATA} ] ; then
 	mkdir -p ${HOST_DATA}/logs
 	mkdir -p ${HOST_DATA}/data

@@ -17,7 +17,7 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-if [ "A$COMMON_CONFIG" == "A" ]
+if [ "A$SZD_COMMON_CONFIG" == "A" ]
 then
 	echo "Error: common.sh not loaded"
 	exit 
@@ -31,10 +31,12 @@ cluster_size=$ZOO_CLUSTER_SIZE
 
 # Start the zookeeper containers
 ZKCLIENT_PORT=2181
+ZKCLIENT_PORT1=2888
+ZKCLIENT_PORT2=3888
 for ((i=1; i <= cluster_size ; i++)); do
   ZKCLIENT_PORT=$((ZKCLIENT_PORT+1))
 
-  HOST_DATA=$COMMON_DATA_DIR"/${conf_prefix}${i}"
+  HOST_DATA=$SZD_COMMON_DATA_DIR"/${conf_prefix}${i}"
   if [ ! -d ${HOST_DATA} ] ; then
     mkdir -p ${HOST_DATA}/logs
     mkdir -p ${HOST_DATA}/data
@@ -47,6 +49,8 @@ for ((i=1; i <= cluster_size ; i++)); do
 
   docker run -d --name "${conf_prefix}${i}" \
         -p $ZKCLIENT_PORT:$ZKCLIENT_PORT \
+        -p $ZKCLIENT_PORT1:$ZKCLIENT_PORT1 \
+        -p $ZKCLIENT_PORT2:$ZKCLIENT_PORT2 \
 	-e ZOO_ID=${i} \
 	-e ZOO_LOG_DIR=/opt/persist/logs \
 	-e ZOO_DATADIR=/opt/persist/data \

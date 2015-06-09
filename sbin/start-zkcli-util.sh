@@ -29,7 +29,7 @@ then
         exit 1
 fi
 
-if [ "A$COMMON_CONFIG_DIR" == "A" ]
+if [ "A$SZD_COMMON_CONFIG_DIR" == "A" ]
 then
         echo "Error: common.sh not loaded"
         exit 1

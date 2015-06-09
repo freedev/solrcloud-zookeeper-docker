@@ -21,7 +21,7 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-if [ "A$COMMON_CONFIG_DIR" == "A" ]
+if [ "A$SZD_COMMON_CONFIG_DIR" == "A" ]
 then
         echo "Error: common.sh not loaded"
         exit
@@ -43,7 +43,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   SOLR_PORT=$((SOLR_PORT+1))
 
   SOLR_HOSTNAME=${HOST_PREFIX}${i}
-  HOST_DATA_DIR=$COMMON_DATA_DIR/${SOLR_HOSTNAME}
+  HOST_DATA_DIR=$SZD_COMMON_DATA_DIR/${SOLR_HOSTNAME}
 
   if [ ! -d ${HOST_DATA_DIR} ] ; then
     mkdir -p ${HOST_DATA_DIR}/logs
