@@ -43,6 +43,9 @@ fi
 # start docker instance
 docker run -d --name "${conf_container}" \
 	-p 2181:2181 \
+	-p 2888:2888 \
+	-p 3888:3888 \
+	-P \
 	-e ZOO_ID=1 \
 	-e ZOO_LOG_DIR=/opt/persist/logs \
 	-e ZOO_DATADIR=/opt/persist/data \
