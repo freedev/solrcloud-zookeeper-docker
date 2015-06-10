@@ -4,7 +4,7 @@ set -e
 container_name=solrcloud5
 
 #SOLR_HEAP=""
-#SOLR_JAVA_MEM="-Xms512m -Xmx2048m"
+SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
 IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
@@ -20,21 +20,21 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-if [ "A$SZD_COMMON_CONFIG_DIR" == "A" ]
+if [ "A$SZD_CONFIG_DIR" == "A" ]
 then
         echo "Error: common.sh not loaded"
         exit
 fi
 
-if [ ! -f $ZOO_CFG_FILE ]
+if [ ! -f $ZK_CFG_FILE ]
 then
-        echo "Error: $ZOO_CFG_FILE not found. Have you started zookeeper?"
+        echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
         exit
 fi
 
 # Start the solrcloud containers
 SOLR_PORT=8080
-HOST_PREFIX=solrcloud5-
+HOST_PREFIX=${container_name}-
 ZKHOST=$(cat $ZKHOST_CFG_FILE)
 HOSTS_CLUSTER='
 '
@@ -44,7 +44,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   SOLR_PORT=$((SOLR_PORT+1))
 
   SOLR_HOSTNAME=${HOST_PREFIX}${i}
-  HOST_DATA_DIR=$SZD_COMMON_DATA_DIR/${SOLR_HOSTNAME}
+  HOST_DATA_DIR=$SZD_DATA_DIR/${SOLR_HOSTNAME}
 
   if [ ! -d ${HOST_DATA_DIR} ] ; then
     mkdir -p ${HOST_DATA_DIR}/logs
@@ -66,7 +66,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" --name "${SOLR_HOSTNAME}" \
 	-e SOLR_HEAP="$SOLR_HEAP" \
 	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
-	freedev/solrcloud5
+	freedev/${container_name}
 
   container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
   line="${container_ip} ${SOLR_HOSTNAME}"

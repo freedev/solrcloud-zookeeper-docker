@@ -21,15 +21,15 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-if [ "A$SZD_COMMON_CONFIG_DIR" == "A" ]
+if [ "A$SZD_CONFIG_DIR" == "A" ]
 then
         echo "Error: common.sh not loaded"
         exit
 fi
 
-if [ ! -f $ZOO_CFG_FILE ]
+if [ ! -f $ZK_CFG_FILE ]
 then
-	echo "Error: $ZOO_CFG_FILE not found. Have you started zookeeper?"
+	echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
         exit
 fi
 
@@ -43,7 +43,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   SOLR_PORT=$((SOLR_PORT+1))
 
   SOLR_HOSTNAME=${HOST_PREFIX}${i}
-  HOST_DATA_DIR=$SZD_COMMON_DATA_DIR/${SOLR_HOSTNAME}
+  HOST_DATA_DIR=$SZD_DATA_DIR/${SOLR_HOSTNAME}
 
   if [ ! -d ${HOST_DATA_DIR} ] ; then
     mkdir -p ${HOST_DATA_DIR}/logs

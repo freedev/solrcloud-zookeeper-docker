@@ -27,7 +27,7 @@ fi
 conf_prefix=zookeeper_
 conf_container=${conf_prefix}1
 
-cluster_size=$ZOO_CLUSTER_SIZE
+cluster_size=$ZK_CLUSTER_SIZE
 
 # Start the zookeeper containers
 ZKCLIENT_PORT=2181
@@ -38,7 +38,7 @@ for ((i=1; i <= cluster_size ; i++)); do
   ZKCLIENT_PORT1=$((ZKCLIENT_PORT1+1))
   ZKCLIENT_PORT2=$((ZKCLIENT_PORT2+1))
 
-  HOST_DATA=$SZD_COMMON_DATA_DIR"/${conf_prefix}${i}"
+  HOST_DATA=$SZD_DATA_DIR"/${conf_prefix}${i}"
   if [ ! -d ${HOST_DATA} ] ; then
     mkdir -p ${HOST_DATA}/logs
     mkdir -p ${HOST_DATA}/data
@@ -89,7 +89,7 @@ done
 
 config="${config}"$'\n'"dataDir=/opt/persist/data"
 
-echo "${config}" > $ZOO_CFG_FILE
+echo "${config}" > $ZK_CFG_FILE
 echo "${zkhost}" > $ZKHOST_CFG_FILE
 
 # Look up the zookeeper instance IPs and add clientPortAddress config 
@@ -98,7 +98,7 @@ for ((i=1; i <= cluster_size ; i++)); do
   ZKCLIENT_PORT=$((ZKCLIENT_PORT+1))
   container_name=${conf_prefix}${i}
   container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
-  cat $ZOO_CFG_FILE | docker exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZOO_CFG_FILE
+  cat $ZK_CFG_FILE | docker exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
   echo "clientPortAddress=$container_ip" | docker exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
   echo "clientPort=$ZKCLIENT_PORT" | docker exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
 done

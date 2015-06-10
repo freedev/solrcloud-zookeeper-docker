@@ -8,36 +8,40 @@ then
 	exit 1
 fi
 
-if [ "A$SZD_COMMON_DATA_DIR" == "A" ]
+if [ "A$SZD_DATA_DIR" == "A" ]
 then
-	export SZD_COMMON_DATA_DIR=$SZD_HOME/data
+	export SZD_DATA_DIR=$SZD_HOME/data
 	if [ ! -d $SZD_HOME/data ]
 	then
 		mkdir $SZD_HOME/data
 	fi
 fi
 
-if [ ! -d $SZD_COMMON_DATA_DIR ]
+if [ ! -d $SZD_DATA_DIR ]
 then
-	echo "ERROR: "$SZD_COMMON_DATA_DIR" unable to access contaners data dir!"
+	echo "ERROR: "$SZD_DATA_DIR" unable to access contaners data dir!"
 	exit 1
 fi
 
-export SZD_COMMON_CONFIG_DIR=$SZD_COMMON_DATA_DIR/config
+export SZD_CONFIG_DIR=$SZD_DATA_DIR/config
 
-if [ ! -d $SZD_COMMON_CONFIG_DIR ]
+if [ ! -d $SZD_CONFIG_DIR ]
 then
-	echo "INFO: "$SZD_COMMON_CONFIG_DIR" not found, creating..."
-	mkdir -p $SZD_COMMON_CONFIG_DIR
+	echo "INFO: "$SZD_CONFIG_DIR" not found, creating..."
+	mkdir -p $SZD_CONFIG_DIR
 fi
 
-export ZOO_CLUSTER_SIZE=3
+export ZK_CLUSTER_SIZE=3
+
+export ZK_JVMFLAGS="-Xms512m -Xmx2048m"
+
+export ZK_CFG_FILE=$SZD_CONFIG_DIR/zoo.cfg
+
+export ZKHOST_CFG_FILE=$SZD_CONFIG_DIR/zkhost.cfg
 
 export SOLRCLOUD_CLUSTER_SIZE=3
 
-export ZOO_CFG_FILE=$SZD_COMMON_CONFIG_DIR/zoo.cfg
-
-export ZKHOST_CFG_FILE=$SZD_COMMON_CONFIG_DIR/zkhost.cfg
+export SOLRCLOUD_JVMFLAGS="-Xms512m -Xmx2048m"
 
 export SZD_COMMON_CONFIG="LOADED"
 

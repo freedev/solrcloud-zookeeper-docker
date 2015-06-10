@@ -14,11 +14,12 @@ if [ ! -f /opt/zookeeper/conf/zoo.cfg ] ; then
 fi
 
 if [ -z ${SERVER_JVMFLAGS} ] ; then
-  export SERVER_JVMFLAGS=" -Xmx1g -Dzookeeper.serverCnxnFactory=org.apache.zookeeper.server.NettyServerCnxnFactory"
+  # export SERVER_JVMFLAGS=" -Xmx1g -Dzookeeper.serverCnxnFactory=org.apache.zookeeper.server.NettyServerCnxnFactory"
+  export SERVER_JVMFLAGS=" -Xmx1g "
 fi
 
 mkdir -p ${ZOO_DATADIR}
 
 echo "${ZOO_ID}" > ${ZOO_DATADIR}/myid
 
-exec /opt/zookeeper/bin/zkServer.sh start-foreground
+exec /opt/zookeeper/bin/zkServer.sh start-foreground >> $ZOO_LOG_DIR/zk-console.log 2>&1

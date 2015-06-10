@@ -10,15 +10,15 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-if [ "A$SZD_COMMON_CONFIG_DIR" == "A" ]
+if [ "A$SZD_CONFIG_DIR" == "A" ]
 then
         echo "Error: common.sh not loaded"
         exit
 fi
 
-if [ ! -f $ZOO_CFG_FILE ]
+if [ ! -f $ZK_CFG_FILE ]
 then
-	echo "Error: $ZOO_CFG_FILE not found. Have you started zookeeper?"
+	echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
         exit
 fi
 

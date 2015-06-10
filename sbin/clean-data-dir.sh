@@ -18,7 +18,7 @@ fi
 
 $SZD_HOME/sbin/stop-all.sh
 
-echo "Warning: this script will remove all data from $SZD_COMMON_DATA_DIR"
+echo "Warning: this script will remove all data from $SZD_DATA_DIR"
 select yn in "Remove_All" "Exit"; do
     case $yn in
         Remove_All ) break;;
@@ -26,5 +26,5 @@ select yn in "Remove_All" "Exit"; do
     esac
 done
 
-sudo rm -rf $SZD_COMMON_DATA_DIR/*
+sudo rm -rf $SZD_DATA_DIR/*
 

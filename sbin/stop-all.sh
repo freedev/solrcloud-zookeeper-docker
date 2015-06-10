@@ -18,7 +18,6 @@ fi
 
 echo ""
 echo "Warning: this script will stop all containers running."
-echo "If removing step doesn't start after stop, wait few seconds and try again..."
 echo " "
 select yn in "Stop_All" "Exit"; do
     case $yn in

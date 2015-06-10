@@ -29,7 +29,7 @@ conf_container=zookeeper
 
 # Start the zookeeper container
 
-HOST_DATA="$SZD_COMMON_DATA_DIR/${conf_container}"
+HOST_DATA="$SZD_DATA_DIR/${conf_container}"
 if [ ! -d ${HOST_DATA} ] ; then
 	mkdir -p ${HOST_DATA}/logs
 	mkdir -p ${HOST_DATA}/data
@@ -49,7 +49,7 @@ docker run -d --name "${conf_container}" \
 	-e ZOO_ID=1 \
 	-e ZOO_LOG_DIR=/opt/persist/logs \
 	-e ZOO_DATADIR=/opt/persist/data \
-	-e SERVER_JVMFLAGS=" -Xmx1g " \
+	-e SERVER_JVMFLAGS=$ZK_JVMFLAGS \
 	-v "$HOST_DATA:/opt/persist" ${mantainer_name}/$container_name
 
 zkhost=""
@@ -73,11 +73,11 @@ config="${config}"$'\n'"${line}"
 zkhost="${zkhost}${container_ip}:2181"
 
 # create common zookeeper configuration files
-echo "${config}" > $ZOO_CFG_FILE
+echo "${config}" > $ZK_CFG_FILE
 echo "${zkhost}" > $ZKHOST_CFG_FILE
 
 # copy zoo.cfg file inside running container
-cat $ZOO_CFG_FILE | docker exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZOO_CFG_FILE
+cat $ZK_CFG_FILE | docker exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
 
 # Write the config to the config container
 echo "Waiting for zookeeper startup... ${zkhost}"
