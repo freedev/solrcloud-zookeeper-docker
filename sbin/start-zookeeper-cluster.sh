@@ -35,6 +35,8 @@ ZKCLIENT_PORT1=2888
 ZKCLIENT_PORT2=3888
 for ((i=1; i <= cluster_size ; i++)); do
   ZKCLIENT_PORT=$((ZKCLIENT_PORT+1))
+  ZKCLIENT_PORT1=$((ZKCLIENT_PORT1+1))
+  ZKCLIENT_PORT2=$((ZKCLIENT_PORT2+1))
 
   HOST_DATA=$SZD_COMMON_DATA_DIR"/${conf_prefix}${i}"
   if [ ! -d ${HOST_DATA} ] ; then
@@ -58,6 +60,9 @@ for ((i=1; i <= cluster_size ; i++)); do
 done
 
 # initial default zoo.cfg
+ZKCLIENT_PORT=2181
+ZKCLIENT_PORT1=2888
+ZKCLIENT_PORT2=3888
 config="tickTime=10000
 #dataDir=/var/lib/zookeeper
 #clientPort=2181
@@ -69,14 +74,17 @@ zkhost=""
 # Look up the zookeeper instance IPs and create the config file
 for ((i=1; i <= cluster_size ; i++)); do
   container_name=${conf_prefix}${i}
+  ZKCLIENT_PORT=$((ZKCLIENT_PORT+1))
+  ZKCLIENT_PORT1=$((ZKCLIENT_PORT1+1))
+  ZKCLIENT_PORT2=$((ZKCLIENT_PORT2+1))
   container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
-  line="server.${i}=${container_ip}:2888:3888"
+  line="server.${i}=${container_ip}:$ZKCLIENT_PORT1:$ZKCLIENT_PORT2"
   config="${config}"$'\n'"${line}"
   if [ "A$zkhost" != "A" ]
   then
   	zkhost="${zkhost},"
   fi
-  zkhost="${zkhost}${container_ip}:2181"
+  zkhost="${zkhost}${container_ip}:$ZKCLIENT_PORT"
 done
 
 config="${config}"$'\n'"dataDir=/opt/persist/data"
