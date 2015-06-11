@@ -48,7 +48,7 @@ docker run -d --name "${conf_container}" \
 	-e ZOO_ID=1 \
 	-e ZOO_LOG_DIR=/opt/persist/logs \
 	-e ZOO_DATADIR=/opt/persist/data \
-	-e SERVER_JVMFLAGS=$ZK_JVMFLAGS \
+	-e SERVER_JVMFLAGS="$ZK_JVMFLAGS" \
 	-v "$HOST_DATA:/opt/persist" ${mantainer_name}/$container_name
 
 zkhost=""
