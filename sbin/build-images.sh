@@ -2,7 +2,7 @@
 
 set -ex
 
-docker build -t freedev/java ../java/
+docker build -t freedev/java8 ../java8/
 
 docker build -t freedev/zookeeper ../zookeeper/
 

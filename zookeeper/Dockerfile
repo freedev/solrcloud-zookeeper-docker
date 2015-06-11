@@ -1,4 +1,4 @@
-FROM freedev/java
+FROM freedev/java8
 
 MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 

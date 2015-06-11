@@ -1,4 +1,4 @@
-FROM ubuntu:latest
+FROM debian:jessie
 
 MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 
