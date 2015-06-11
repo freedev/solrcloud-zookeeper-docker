@@ -3,7 +3,7 @@ docker-solrcloud-zookeeper
 
 A SolrCloud cluster and Zookeeper ensemble that runs in Docker
 
-Start a 3 node SolrCloud and a 3 node Zookeeper ensemble running:
+Start a 3 node SolrCloud 5.2 and a 3 node Zookeeper 3.4.6 ensemble running:
 
     ./startup.sh
     
