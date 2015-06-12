@@ -5,8 +5,13 @@ container_name=zkcli
 
 IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
+    docker pull freedev/${container_name}
+    rc=$?
+    if [[ $rc != 0 ]]
+    then
     echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-    exit 1
+            exit $rc
+    fi
 fi
 
 if [ "A$SZD_HOME" == "A" ]
@@ -41,9 +46,11 @@ then
 	exit 1
 fi
 
-if [ ! -d "$3" ]
+WORK_PATH=$(readlink -f $3)
+
+if [ ! -d "$WORK_PATH" ]
 then
-	echo "ERROR: $3 is not a directory or cannot be found..."
+	echo "ERROR: $WORK_PATH is not a directory or cannot be found..."
 	exit 1
 fi
 
@@ -53,7 +60,7 @@ echo "${zkhost}"
 # Write the config to the config container
 
 docker run -d -v /opt/zookeeper/conf \
-	-v $3:/opt/conf \
+	-v $WORK_PATH:/opt/conf \
 	-e ZKHOST=${zkhost} \
 	-e ZKCLI_CMD=$1 \
 	-e COLLECTION_PATH=/opt/conf \

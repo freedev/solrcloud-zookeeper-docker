@@ -9,8 +9,13 @@ fi
 
 IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-    exit 1
+    docker pull freedev/${container_name}
+    rc=$?
+    if [[ $rc != 0 ]]
+    then
+            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+            exit $rc
+    fi
 fi
 
 if [ "A$SZD_HOME" == "A" ]
