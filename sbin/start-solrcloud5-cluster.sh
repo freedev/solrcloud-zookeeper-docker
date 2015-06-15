@@ -1,14 +1,15 @@
 #!/bin/bash
 
 set -e
+mantainer_name=freedev
 container_name=solrcloud5
 
 #SOLR_HEAP=""
 SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
-IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
+IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    docker pull freedev/${container_name}
+    docker pull ${mantainer_name}/${container_name}
     rc=$?
     if [[ $rc != 0 ]]
     then
@@ -71,7 +72,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" --name "${SOLR_HOSTNAME}" \
 	-e SOLR_HEAP="$SOLR_HEAP" \
 	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
-	freedev/${container_name}
+	${mantainer_name}/${container_name}
 
   container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
   line="${container_ip} ${SOLR_HOSTNAME}"

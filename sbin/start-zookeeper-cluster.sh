@@ -1,11 +1,12 @@
 #!/bin/bash
 
 set -e
+mantainer_name=freedev
 container_name=zookeeper
 
-IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
+IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    docker pull freedev/${container_name} 
+    docker pull ${mantainer_name}/${container_name} 
     rc=$?
     if [ $rc != 0 ]
     then
@@ -61,7 +62,7 @@ for ((i=1; i <= cluster_size ; i++)); do
 	-e ZOO_ID=${i} \
 	-e ZOO_LOG_DIR=/opt/persist/logs \
 	-e ZOO_DATADIR=/opt/persist/data \
-	-v "$HOST_DATA:/opt/persist" freedev/${container_name}
+	-v "$HOST_DATA:/opt/persist" ${mantainer_name}/${container_name}
 done
 
 # initial default zoo.cfg

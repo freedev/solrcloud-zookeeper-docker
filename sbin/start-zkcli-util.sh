@@ -1,15 +1,16 @@
 #!/bin/bash
 
 set -e
+mantainer_name=freedev
 container_name=zkcli
 
-IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
+IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    docker pull freedev/${container_name}
+    docker pull ${mantainer_name}/${container_name}
     rc=$?
     if [[ $rc != 0 ]]
     then
-    echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
             exit $rc
     fi
 fi
@@ -30,7 +31,7 @@ fi
 
 if [ "A$1" == "A" -o "A$2" == "A" -o "A$3" == "A" ]
 then
-        echo "Usage: $0 [upconfig|downconfig] collection_name /solrcloud/collection/config/path"
+        echo "Usage: $0 [upconfig|list|downconfig] collection_name /solrcloud/collection/config/path"
         exit 1
 fi
 
@@ -40,7 +41,7 @@ then
         exit 1
 fi
 
-if [ "$1" != "upconfig" -a "$1" != "downconfig" ]
+if [ "$1" != "upconfig" -a "$1" != "downconfig" -a "$1" != "list"  ]
 then
 	echo "ERROR: $1 command not supported..."
 	exit 1
@@ -65,7 +66,7 @@ docker run -d -v /opt/zookeeper/conf \
 	-e ZKCLI_CMD=$1 \
 	-e COLLECTION_PATH=/opt/conf \
 	-e COLLECTION_NAME=$2 \
-	freedev/zkcli > /tmp/$$.zkcli.tmp
+	${mantainer_name}/${container_name} > /tmp/$$.zkcli.tmp
 
 ZKCLI_CONTAINER_ID=$(cat /tmp/$$.zkcli.tmp)
 

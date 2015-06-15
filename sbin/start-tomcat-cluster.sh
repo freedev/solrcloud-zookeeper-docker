@@ -2,14 +2,16 @@
 
 set -e
 
+mantainer_name=freedev
+
 if [ -z "$container_name" ]
 then
 	container_name=solr-tomcat
 fi
 
-IMAGE=$(docker images | grep "freedev/${container_name} " |  awk '{print $3}')
+IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    docker pull freedev/${container_name}
+    docker pull ${mantainer_name}/${container_name}
     rc=$?
     if [[ $rc != 0 ]]
     then
@@ -71,7 +73,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-v "$HOST_DATA_DIR/store:/store" \
 	-p ${SOLR_PORT}:8080 \
 	--name "${SOLR_HOSTNAME}" \
-	freedev/${container_name}
+	${mantainer_name}/${container_name}
 
 done
 
