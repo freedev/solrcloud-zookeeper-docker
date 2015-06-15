@@ -2,21 +2,25 @@
 
 set -ex
 
-docker build -t freedev/java8 ../java8/
+mantainer=freedev
 
-docker build -t freedev/zookeeper ../zookeeper/
+# docker build -t ${mantainer}/curl ../curl/
 
-docker build -t freedev/tomcat ../tomcat/
+# docker build -t ${mantainer}/java8 ../java8/
 
-docker build -t freedev/solr-tomcat ../solr-tomcat/
+# docker build -t ${mantainer}/zookeeper ../zookeeper/
 
-docker build -t freedev/solrcloud4-base ../solrcloud4-base/
+# docker build -t ${mantainer}/tomcat ../tomcat/
 
-docker build -t freedev/solrcloud4 ../solrcloud4/
+# docker build -t ${mantainer}/solr-tomcat ../solr-tomcat/
 
-docker build -t freedev/solrcloud5-base ../solrcloud5-base/
+docker build -t ${mantainer}/solrcloud4-base ../solrcloud4-base/
 
-docker build -t freedev/solrcloud5 ../solrcloud5/
+docker build -t ${mantainer}/solrcloud4 ../solrcloud4/
 
-docker build -t freedev/zkcli ../zkcli/
+docker build -t ${mantainer}/solrcloud5-base ../solrcloud5-base/
+
+docker build -t ${mantainer}/solrcloud5 ../solrcloud5/
+
+docker build -t ${mantainer}/zkcli ../zkcli/
 
