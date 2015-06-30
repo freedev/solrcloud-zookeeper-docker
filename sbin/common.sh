@@ -31,7 +31,7 @@ then
 	mkdir -p $SZD_CONFIG_DIR
 fi
 
-export DOCKER_BIN=sudo docker
+export DOCKER_BIN="sudo docker"
 
 export ZK_CLUSTER_SIZE=3
 
