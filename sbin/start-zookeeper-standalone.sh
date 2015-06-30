@@ -4,12 +4,6 @@ set -e
 mantainer_name=freedev
 container_name=zookeeper
 
-IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
-if [[ -z $IMAGE ]]; then
-    echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-    exit 1
-fi
-
 if [ "A$SZD_HOME" == "A" ]
 then
         echo "ERROR: "\$SZD_HOME" environment variable not found!"
@@ -17,6 +11,12 @@ then
 fi
 
 . $SZD_HOME/sbin/common.sh
+
+IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
+if [[ -z $IMAGE ]]; then
+    echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+    exit 1
+fi
 
 if [ "A$SZD_COMMON_CONFIG" == "A" ]
 then
@@ -40,8 +40,8 @@ if [ ! -d ${HOST_DATA} ] ; then
 	exit
 fi
 
-# start docker instance
-docker run -d --name "${conf_container}" \
+# start $DOCKER_BIN instance
+$DOCKER_BIN run -d --name "${conf_container}" \
 	-p 2181:2181 \
 	-p 2888:2888 \
 	-p 3888:3888 \
@@ -55,7 +55,7 @@ zkhost=""
 
 # Look up the zookeeper instance IPs and create the config file
 i=1
-container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
+container_ip=$($DOCKER_BIN inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
 line="server.${i}=${container_ip}:2888:3888"
 
 # create zookeeper template config
@@ -76,7 +76,7 @@ echo "${config}" > $ZK_CFG_FILE
 echo "${zkhost}" > $ZKHOST_CFG_FILE
 
 # copy zoo.cfg file inside running container
-cat $ZK_CFG_FILE | docker exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
+cat $ZK_CFG_FILE | $DOCKER_BIN exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
 
 # Write the config to the config container
 echo "Waiting for zookeeper startup... ${zkhost}"

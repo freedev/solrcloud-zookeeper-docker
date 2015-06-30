@@ -28,5 +28,5 @@ done
 
 echo "..."
 echo "Stopping..."
-docker ps -q | xargs -I{} docker exec -i "{}" /stop-server.sh
+$DOCKER_BIN ps -q | xargs -I{} $DOCKER_BIN exec -i "{}" /stop-server.sh
 echo "Done"

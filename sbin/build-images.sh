@@ -4,23 +4,31 @@ set -ex
 
 mantainer_name=freedev
 
-docker build -t ${mantainer_name}/curl ../curl/
+if [ "A$SZD_HOME" == "A" ]
+then
+        echo "ERROR: "\$SZD_HOME" environment variable not found!"
+        exit 1
+fi
 
-docker build -t ${mantainer_name}/java8 ../java8/
+. $SZD_HOME/sbin/common.sh
 
-docker build -t ${mantainer_name}/zookeeper ../zookeeper/
+$DOCKER_BIN build -t ${mantainer_name}/curl ../curl/
 
-docker build -t ${mantainer_name}/tomcat ../tomcat/
+$DOCKER_BIN build -t ${mantainer_name}/java8 ../java8/
 
-docker build -t ${mantainer_name}/solr-tomcat ../solr-tomcat/
+$DOCKER_BIN build -t ${mantainer_name}/zookeeper ../zookeeper/
 
-docker build -t ${mantainer_name}/solrcloud4-base ../solrcloud4-base/
+$DOCKER_BIN build -t ${mantainer_name}/tomcat ../tomcat/
 
-docker build -t ${mantainer_name}/solrcloud4 ../solrcloud4/
+$DOCKER_BIN build -t ${mantainer_name}/solr-tomcat ../solr-tomcat/
 
-docker build -t ${mantainer_name}/solrcloud5-base ../solrcloud5-base/
+$DOCKER_BIN build -t ${mantainer_name}/solrcloud4-base ../solrcloud4-base/
 
-docker build -t ${mantainer_name}/solrcloud5 ../solrcloud5/
+$DOCKER_BIN build -t ${mantainer_name}/solrcloud4 ../solrcloud4/
 
-docker build -t ${mantainer_name}/zkcli ../zkcli/
+$DOCKER_BIN build -t ${mantainer_name}/solrcloud5-base ../solrcloud5-base/
+
+$DOCKER_BIN build -t ${mantainer_name}/solrcloud5 ../solrcloud5/
+
+$DOCKER_BIN build -t ${mantainer_name}/zkcli ../zkcli/
 

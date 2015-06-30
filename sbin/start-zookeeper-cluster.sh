@@ -4,17 +4,6 @@ set -e
 mantainer_name=freedev
 container_name=zookeeper
 
-IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
-if [[ -z $IMAGE ]]; then
-    docker pull ${mantainer_name}/${container_name} 
-    rc=$?
-    if [ $rc != 0 ]
-    then
-	    echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-	    exit $rc
-    fi
-fi
-
 if [ "A$SZD_HOME" == "A" ]
 then
         echo "ERROR: "\$SZD_HOME" environment variable not found!"
@@ -22,6 +11,17 @@ then
 fi
 
 . $SZD_HOME/sbin/common.sh
+
+IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
+if [[ -z $IMAGE ]]; then
+    $DOCKER_BIN pull ${mantainer_name}/${container_name} 
+    rc=$?
+    if [ $rc != 0 ]
+    then
+	    echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+	    exit $rc
+    fi
+fi
 
 if [ "A$SZD_COMMON_CONFIG" == "A" ]
 then
@@ -55,7 +55,7 @@ for ((i=1; i <= cluster_size ; i++)); do
     exit
   fi
 
-  docker run -d --name "${conf_prefix}${i}" \
+  $DOCKER_BIN run -d --name "${conf_prefix}${i}" \
         -p $ZKCLIENT_PORT:$ZKCLIENT_PORT \
         -p $ZKCLIENT_PORT1:$ZKCLIENT_PORT1 \
         -p $ZKCLIENT_PORT2:$ZKCLIENT_PORT2 \
@@ -83,7 +83,7 @@ for ((i=1; i <= cluster_size ; i++)); do
   ZKCLIENT_PORT=$((ZKCLIENT_PORT+1))
   ZKCLIENT_PORT1=$((ZKCLIENT_PORT1+1))
   ZKCLIENT_PORT2=$((ZKCLIENT_PORT2+1))
-  container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
+  container_ip=$($DOCKER_BIN inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
   line="server.${i}=${container_ip}:$ZKCLIENT_PORT1:$ZKCLIENT_PORT2"
   config="${config}"$'\n'"${line}"
   if [ "A$zkhost" != "A" ]
@@ -103,10 +103,10 @@ ZKCLIENT_PORT=2181
 for ((i=1; i <= cluster_size ; i++)); do
   ZKCLIENT_PORT=$((ZKCLIENT_PORT+1))
   container_name=${conf_prefix}${i}
-  container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
-  cat $ZK_CFG_FILE | docker exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
-  echo "clientPortAddress=$container_ip" | docker exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
-  echo "clientPort=$ZKCLIENT_PORT" | docker exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
+  container_ip=$($DOCKER_BIN inspect --format '{{.NetworkSettings.IPAddress}}' ${container_name})
+  cat $ZK_CFG_FILE | $DOCKER_BIN exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
+  echo "clientPortAddress=$container_ip" | $DOCKER_BIN exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
+  echo "clientPort=$ZKCLIENT_PORT" | $DOCKER_BIN exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
 done
 
 # Write the config to the config container

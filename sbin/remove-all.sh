@@ -29,7 +29,7 @@ done
 echo "..."
 echo "Removing..."
 
-docker ps -a -q | xargs -I{} docker rm {}
+$DOCKER_BIN ps -a -q | xargs -I{} $DOCKER_BIN rm {}
 
 echo "Removing zoo.cfg..."
 if [ -f $ZK_CFG_FILE ]

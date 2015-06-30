@@ -9,17 +9,6 @@ then
 	container_name=solr-tomcat
 fi
 
-IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
-if [[ -z $IMAGE ]]; then
-    docker pull ${mantainer_name}/${container_name}
-    rc=$?
-    if [[ $rc != 0 ]]
-    then
-            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-            exit $rc
-    fi
-fi
-
 if [ "A$SZD_HOME" == "A" ]
 then
         echo "ERROR: "\$SZD_HOME" environment variable not found!"
@@ -27,6 +16,17 @@ then
 fi
 
 . $SZD_HOME/sbin/common.sh
+
+IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
+if [[ -z $IMAGE ]]; then
+    $DOCKER_BIN pull ${mantainer_name}/${container_name}
+    rc=$?
+    if [[ $rc != 0 ]]
+    then
+            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+            exit $rc
+    fi
+fi
 
 if [ "A$SZD_CONFIG_DIR" == "A" ]
 then
@@ -62,7 +62,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
     exit
   fi
 
-  docker run -d \
+  $DOCKER_BIN run -d \
 	-e SOLR_PORT=8080 \
 	-e SOLR_JAVA_MEM="-Xms512m -Xmx1536m" \
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" \

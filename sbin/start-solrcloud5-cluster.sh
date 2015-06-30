@@ -7,17 +7,6 @@ container_name=solrcloud5
 #SOLR_HEAP=""
 SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
-IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
-if [[ -z $IMAGE ]]; then
-    docker pull ${mantainer_name}/${container_name}
-    rc=$?
-    if [[ $rc != 0 ]]
-    then
-            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-            exit $rc
-    fi
-fi
-
 if [ "A$SZD_HOME" == "A" ]
 then
         echo "ERROR: "\$SZD_HOME" environment variable not found!"
@@ -25,6 +14,17 @@ then
 fi
 
 . $SZD_HOME/sbin/common.sh
+
+IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
+if [[ -z $IMAGE ]]; then
+    $DOCKER_BIN pull ${mantainer_name}/${container_name}
+    rc=$?
+    if [[ $rc != 0 ]]
+    then
+            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+            exit $rc
+    fi
+fi
 
 if [ "A$SZD_CONFIG_DIR" == "A" ]
 then
@@ -62,7 +62,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
     exit
   fi
 
-  docker run -d \
+  $DOCKER_BIN run -d \
 	-v "$HOST_DATA_DIR/logs:/opt/logs" \
 	-v "$HOST_DATA_DIR/store:/store" \
 	-e SOLR_DATA=/store/solr \
@@ -74,7 +74,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
 	${mantainer_name}/${container_name}
 
-  container_ip=$(docker inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
+  container_ip=$($DOCKER_BIN inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
   line="${container_ip} ${SOLR_HOSTNAME}"
   HOSTS_CLUSTER="${HOSTS_CLUSTER}"$'\n'"${line}"$'\n'
 
@@ -85,6 +85,6 @@ echo ${HOSTS_CLUSTER}
 
 for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
     SOLR_HOSTNAME=${HOST_PREFIX}${i}
-    echo "${HOSTS_CLUSTER}" | docker exec -i ${SOLR_HOSTNAME} bash -c 'cat > /opt/config/hosts.cluster'
+    echo "${HOSTS_CLUSTER}" | $DOCKER_BIN exec -i ${SOLR_HOSTNAME} bash -c 'cat > /opt/config/hosts.cluster'
 done
 

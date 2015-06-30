@@ -31,6 +31,8 @@ then
 	mkdir -p $SZD_CONFIG_DIR
 fi
 
+export DOCKER_BIN=sudo docker
+
 export ZK_CLUSTER_SIZE=3
 
 export ZK_JVMFLAGS="-Xms512m -Xmx2048m"

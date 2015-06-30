@@ -1,9 +1,9 @@
 #!/bin/bash
 
-docker ps -q | xargs -I{} docker exec -i {} /kill-server.sh
+$DOCKER_BIN ps -q | xargs -I{} $DOCKER_BIN exec -i {} /kill-server.sh
 sleep 2
-docker ps -q | xargs -I{} docker stop {} 
+$DOCKER_BIN ps -q | xargs -I{} $DOCKER_BIN stop {} 
 sleep 2
-docker ps -a -q | xargs -I{} docker rm {}
+$DOCKER_BIN ps -a -q | xargs -I{} $DOCKER_BIN rm {}
 
 

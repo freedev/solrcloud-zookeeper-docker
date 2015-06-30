@@ -4,17 +4,6 @@ set -e
 mantainer_name=freedev
 container_name=zkcli
 
-IMAGE=$(docker images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
-if [[ -z $IMAGE ]]; then
-    docker pull ${mantainer_name}/${container_name}
-    rc=$?
-    if [[ $rc != 0 ]]
-    then
-            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-            exit $rc
-    fi
-fi
-
 if [ "A$SZD_HOME" == "A" ]
 then
         echo "ERROR: "\$SZD_HOME" environment variable not found!"
@@ -22,6 +11,18 @@ then
 fi
 
 . $SZD_HOME/sbin/common.sh
+
+
+IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
+if [[ -z $IMAGE ]]; then
+    $DOCKER_BIN pull ${mantainer_name}/${container_name}
+    rc=$?
+    if [[ $rc != 0 ]]
+    then
+            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+            exit $rc
+    fi
+fi
 
 if [ ! -f $ZK_CFG_FILE ]
 then
@@ -60,7 +61,7 @@ echo "${zkhost}"
 
 # Write the config to the config container
 
-docker run -d -v /opt/zookeeper/conf \
+$DOCKER_BIN run -d -v /opt/zookeeper/conf \
 	-v $WORK_PATH:/opt/conf \
 	-e ZKHOST=${zkhost} \
 	-e ZKCLI_CMD=$1 \
@@ -74,15 +75,15 @@ rm /tmp/$$.zkcli.tmp
 
 sleep 1
 
-ZKCLI_HOSTNAME=$(docker inspect $ZKCLI_CONTAINER_ID | grep \"Hostname\" | sed 's/\"/ /g'  | awk '{ print $3 }')
+ZKCLI_HOSTNAME=$($DOCKER_BIN inspect $ZKCLI_CONTAINER_ID | grep \"Hostname\" | sed 's/\"/ /g'  | awk '{ print $3 }')
 
 echo "--- $ZKCLI_HOSTNAME"
 
 echo "---"
 
 echo -n "Waiting for zookeeper upload..."
-while [ "A$( docker ps | grep $ZKCLI_HOSTNAME )" != "A" ] ; do echo -n "." ; sleep 1; done
+while [ "A$( $DOCKER_BIN ps | grep $ZKCLI_HOSTNAME )" != "A" ] ; do echo -n "." ; sleep 1; done
 echo " done."
 
-docker logs $ZKCLI_HOSTNAME
-docker rm $ZKCLI_HOSTNAME
+$DOCKER_BIN logs $ZKCLI_HOSTNAME
+$DOCKER_BIN rm $ZKCLI_HOSTNAME
