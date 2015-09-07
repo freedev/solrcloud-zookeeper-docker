@@ -18,6 +18,7 @@ if [ -z ${SERVER_JVMFLAGS} ] ; then
   export SERVER_JVMFLAGS=" -Xmx1g "
 fi
 
+mkdir -p ${ZOO_LOG_DIR}
 mkdir -p ${ZOO_DATADIR}
 
 echo "${ZOO_ID}" > ${ZOO_DATADIR}/myid
