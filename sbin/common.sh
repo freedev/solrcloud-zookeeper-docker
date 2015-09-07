@@ -33,7 +33,7 @@ fi
 
 export DOCKER_BIN="sudo docker"
 
-export ZK_CLUSTER_SIZE=3
+export ZK_CLUSTER_SIZE=${ZK_CLUSTER_SIZE:-3}
 
 export ZK_JVMFLAGS="-Xms512m -Xmx2048m"
 
@@ -41,7 +41,7 @@ export ZK_CFG_FILE=$SZD_CONFIG_DIR/zoo.cfg
 
 export ZKHOST_CFG_FILE=$SZD_CONFIG_DIR/zkhost.cfg
 
-export SOLRCLOUD_CLUSTER_SIZE=3
+export SOLRCLOUD_CLUSTER_SIZE=${SOLRCLOUD_CLUSTER_SIZE:-3}
 
 export SOLRCLOUD_JVMFLAGS="-Xms512m -Xmx2048m"
 
