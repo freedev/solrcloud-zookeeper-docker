@@ -42,8 +42,10 @@ fi
 
 # Start the solr-tomcat containers
 SOLR_PORT=8080
-HOST_PREFIX=solr_tomcat_
+HOST_PREFIX=solr-tomcat-
 ZKHOST=$(cat $ZKHOST_CFG_FILE)
+HOSTS_CLUSTER='
+'
 
 for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 
@@ -72,8 +74,22 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-v "$HOST_DATA_DIR/logs:/opt/tomcat/logs" \
 	-v "$HOST_DATA_DIR/store:/store" \
 	-p ${SOLR_PORT}:8080 \
+	-p 8000:8000 \
 	--name "${SOLR_HOSTNAME}" \
 	${mantainer_name}/${container_name}
 
+  container_ip=$($DOCKER_BIN inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
+  line="${container_ip} ${SOLR_HOSTNAME}"
+  HOSTS_CLUSTER="${HOSTS_CLUSTER}"$'\n'"${line}"$'\n'
+
 done
+
+echo "SolrCloud cluster ready:"
+echo ${HOSTS_CLUSTER}
+
+for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
+    SOLR_HOSTNAME=${HOST_PREFIX}${i}
+    echo "${HOSTS_CLUSTER}" | $DOCKER_BIN exec -i ${SOLR_HOSTNAME} bash -c 'cat > /opt/config/hosts.cluster'
+done
+
 
