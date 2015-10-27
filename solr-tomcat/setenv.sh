@@ -20,22 +20,22 @@ JVM_OPTS=" \
 -Dcom.sun.management.jmxremote.authenticate=false \
 "
 
-if [ "A" == "A$SOLR_JAVA_MEM" ]
+if [ "A" == "A$SOLR_JAVA_MEM" ]
 then
   SOLR_JAVA_MEM="-Xms512m -Xmx1536m"
 fi
 
-if [ "A" == "A$SOLR_DATA" ]
+if [ "A" == "A$SOLR_DATA" ]
 then
   SOLR_DATA="/store/solr"
 fi
 
-if [ "A" == "A$SOLR_LOG_DIR" ]
+if [ "A" == "A$SOLR_LOG_DIR" ]
 then
   SOLR_LOG_DIR="/opt/tomcat/logs"
 fi
 
-if [ "A" == "A$ZKHOST" ]
+if [ "A" == "A$ZKHOST" ]
 then
   echo "ERROR: ZKHOST env variable missing!"
   exit
