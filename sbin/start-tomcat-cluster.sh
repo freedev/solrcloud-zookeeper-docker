@@ -65,7 +65,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   fi
 
   $DOCKER_BIN run -d \
-	-e SOLR_PORT=8080 \
+	-e SOLR_PORT=${SOLR_PORT} \
 	-e SOLR_JAVA_MEM="-Xms512m -Xmx1536m" \
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" \
 	-e SOLR_DATA=/store/solr \
@@ -73,7 +73,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-e ZKHOST=${ZKHOST} \
 	-v "$HOST_DATA_DIR/logs:/opt/tomcat/logs" \
 	-v "$HOST_DATA_DIR/store:/store" \
-	-p ${SOLR_PORT}:8080 \
+	-p ${SOLR_PORT}:${SOLR_PORT} \
 	-p 8000:8000 \
 	--name "${SOLR_HOSTNAME}" \
 	${mantainer_name}/${container_name}

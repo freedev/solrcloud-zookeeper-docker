@@ -41,7 +41,9 @@ then
   exit
 fi
 
-export CATALINA_OPTS="-Dsolr.log=$SOLR_LOG_DIR -DzkHost=$ZKHOST -Dsolr.solr.home=$SOLR_DATA -Dhost='$SOLR_HOSTNAME' $SOLR_JAVA_MEM -server $JVM_OPTS"
+export CATALINA_OPTS="-Dport.http.nonssl=$SOLR_PORT -DhostPort=$SOLR_PORT -Dsolr.log=$SOLR_LOG_DIR -DzkHost=$ZKHOST -Dsolr.solr.home=$SOLR_DATA -Dhost='$SOLR_HOSTNAME' $SOLR_JAVA_MEM -server $JVM_OPTS "
+
+export CATALINA_OPTS="-agentlib:jdwp=transport=dt_socket,server=y,address=8000,suspend=n $CATALINA_OPTS"
 
 CLASSPATH=$CATALINA_HOME/lib/jul-to-slf4j-1.7.12.jar:\
 $CATALINA_HOME/lib/slf4j-api-1.7.12.jar:\
