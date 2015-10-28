@@ -4,10 +4,11 @@ MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 
 RUN mkdir -p /opt/config
 
-
 ADD solr.xml /opt/config/
 
 ADD start-server.sh /
+
+ADD stop-server.sh /
 
 RUN chmod +x /start-server.sh
 

@@ -15,4 +15,8 @@ echo 'hosts file found, starting server.'
 cat /opt/config/hosts /opt/config/hosts.cluster > /etc/hosts
 rm /opt/config/hosts.cluster
 
-/opt/tomcat/bin/catalina.sh run >> $SOLR_LOG_DIR/solr-tomcat-console.log 2>&1
+/opt/tomcat/bin/catalina.sh start >> $SOLR_LOG_DIR/solr-tomcat-console.log 2>&1
+
+while [ ! -f /opt/config/stop.node ] ; do
+        sleep 1
+done
