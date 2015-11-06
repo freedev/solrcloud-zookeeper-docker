@@ -12,7 +12,6 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-
 IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
     $DOCKER_BIN pull ${mantainer_name}/${container_name}
@@ -30,11 +29,36 @@ then
         exit
 fi
 
-if [ "A$1" == "A" -o "A$2" == "A" -o "A$3" == "A" ]
-then
-        echo "Usage: $0 [upconfig|list|downconfig] collection_name /solrcloud/collection/config/path"
-        exit 1
-fi
+while getopts ":c:C:p:h:z" opt; do
+  case $opt in
+    c)
+	ZKCLI_CMD=$OPTARG
+      echo "zkCli command: $ZKCLI_CMD" >&2
+      ;;
+    C)
+        COLLECTION_NAME=$OPTARG
+      echo "collection: $COLLECTION_NAME" >&2
+      ;;
+    h)
+        zkhost=$OPTARG
+      echo "host: $zkhost" >&2
+      ;;
+    p)
+        WORK_PATH=$OPTARG
+      echo "path: $WORK_PATH" >&2
+      ;;
+    z)
+      zkhost=$(cat $ZKHOST_CFG_FILE)
+      echo "config found in $ZKHOST_CFG_FILE : ${zkhost}" 
+      ;;
+    \?)
+      echo "Usage: $0 -c [upconfig|list|downconfig] -C collection_name -p /solrcloud/collection/config/path [-z|-h hostname:2181]"
+      ;;
+    :)
+      echo "Invalid option: -$OPTARG" >&2
+      ;;
+  esac
+done
 
 if [ "A$SZD_CONFIG_DIR" == "A" ]
 then
@@ -42,13 +66,13 @@ then
         exit 1
 fi
 
-if [ "$1" != "upconfig" -a "$1" != "downconfig" -a "$1" != "list"  ]
+if [ "$ZKCLI_CMD" != "upconfig" -a "$ZKCLI_CMD" != "downconfig" -a "$ZKCLI_CMD" != "list"  ]
 then
 	echo "ERROR: $1 command not supported..."
 	exit 1
 fi
 
-WORK_PATH=$(readlink -f $3)
+WORK_PATH=$(readlink -f $WORK_PATH)
 
 if [ ! -d "$WORK_PATH" ]
 then
@@ -56,17 +80,14 @@ then
 	exit 1
 fi
 
-zkhost=$(cat $ZKHOST_CFG_FILE)
-echo "${zkhost}" 
-
 # Write the config to the config container
 
 $DOCKER_BIN run -d -v /opt/zookeeper/conf \
 	-v $WORK_PATH:/opt/conf \
 	-e ZKHOST=${zkhost} \
-	-e ZKCLI_CMD=$1 \
+	-e ZKCLI_CMD=$ZKCLI_CMD \
 	-e COLLECTION_PATH=/opt/conf \
-	-e COLLECTION_NAME=$2 \
+	-e COLLECTION_NAME=$COLLECTION_NAME \
 	${mantainer_name}/${container_name} > /tmp/$$.zkcli.tmp
 
 ZKCLI_CONTAINER_ID=$(cat /tmp/$$.zkcli.tmp)
