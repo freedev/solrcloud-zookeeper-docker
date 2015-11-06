@@ -1,7 +1,5 @@
 #!/bin/bash
 
-set -ex
-
 mantainer_name=freedev
 
 if [ "A$SZD_HOME" == "A" ]
@@ -12,7 +10,7 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-$DOCKER_BIN build -t ${mantainer_name}/curl ../curl/
+$DOCKER_BIN build -t ${mantainer_name}/unix-utils ../unix-utils/
 
 $DOCKER_BIN build -t ${mantainer_name}/java8 ../java8/
 
