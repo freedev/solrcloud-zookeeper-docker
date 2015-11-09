@@ -14,9 +14,15 @@ fi
 
 IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    echo "${container_name} image not found... Did you run 'build-images.sh' ?"
-    exit 1
+    $DOCKER_BIN pull ${mantainer_name}/${container_name}
+    rc=$?
+    if [[ $rc != 0 ]]
+    then
+            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+            exit $rc
+    fi
 fi
+
 
 if [ "A$SZD_COMMON_CONFIG" == "A" ]
 then
