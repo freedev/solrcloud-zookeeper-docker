@@ -78,17 +78,21 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   line="${container_ip} ${SOLR_HOSTNAME}"
   HOSTS_CLUSTER="${HOSTS_CLUSTER}"$'\n'"${line}"$'\n'
 
-  echo "starting ${SOLR_HOSTNAME} in port ${SOLR_PORT}"
+  echo "Starting container: ${SOLR_HOSTNAME} ($container_ip) on port: ${SOLR_PORT} ..."
 
 done
 
 echo
 
-echo "SolrCloud cluster ready:"
+echo "SolrCloud cluster running!"
+echo
 echo ${HOSTS_CLUSTER}
 
 for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
     SOLR_HOSTNAME=${HOST_PREFIX}${i}
     echo "${HOSTS_CLUSTER}" | $DOCKER_BIN exec -i ${SOLR_HOSTNAME} bash -c 'cat > /opt/config/hosts.cluster'
 done
+
+echo
+
 

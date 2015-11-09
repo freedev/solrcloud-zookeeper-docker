@@ -107,9 +107,14 @@ for ((i=1; i <= cluster_size ; i++)); do
   cat $ZK_CFG_FILE | $DOCKER_BIN exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
   echo "clientPortAddress=$container_ip" | $DOCKER_BIN exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
   echo "clientPort=$ZKCLIENT_PORT" | $DOCKER_BIN exec -i ${container_name} bash -c 'cat >> /opt/zookeeper/conf/zoo.cfg'
+
+  echo "Starting container: ${container_name} ($container_ip) on port: ${ZKCLIENT_PORT} ..."
+
 done
 
 # Write the config to the config container
-echo "Waiting for zookeeper startup..."
+echo
+echo -n "Waiting for zookeeper startup... "
 sleep 3
-
+echo "Done."
+echo

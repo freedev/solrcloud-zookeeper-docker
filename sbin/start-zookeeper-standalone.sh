@@ -82,9 +82,11 @@ echo "${config}" > $ZK_CFG_FILE
 echo "${zkhost}" > $ZKHOST_CFG_FILE
 
 # copy zoo.cfg file inside running container
-cat $ZK_CFG_FILE | $DOCKER_BIN exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg' < $ZK_CFG_FILE
+cat $ZK_CFG_FILE | $DOCKER_BIN exec -i ${container_name} bash -c 'cat > /opt/zookeeper/conf/zoo.cfg'
 
 # Write the config to the config container
-echo "Waiting for zookeeper startup... ${zkhost}"
+echo
+echo -n "Waiting for zookeeper container startup: ${zkhost} ... "
 sleep 3
 echo "Done."
+echo

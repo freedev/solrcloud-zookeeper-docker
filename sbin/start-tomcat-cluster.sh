@@ -81,7 +81,7 @@ container_id=$(  $DOCKER_BIN run -d \
   line="${container_ip} ${SOLR_HOSTNAME}"
   HOSTS_CLUSTER="${HOSTS_CLUSTER}"$'\n'"${line}"$'\n'
 
-  echo "starting ${SOLR_HOSTNAME} in port ${SOLR_PORT}"
+  echo "Starting container: ${SOLR_HOSTNAME} ($container_ip) on port: ${SOLR_PORT} ..."
 
 done
 

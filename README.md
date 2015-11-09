@@ -1,22 +1,52 @@
 docker-solrcloud-zookeeper
 ================
 
-A SolrCloud cluster and Zookeeper ensemble that runs in Docker
+This project aims to help developers and newbies that would try solrcloud and zookeeper in a docker environment.
 
-Start a 1 container SolrCloud 5.2 and a 1 container Zookeeper 3.4.6 running:
+
+If you want start a lightweight configuration: 1 SolrCloud container and 1 Zookeeper container, run:
 
     ./startup.sh
-    
-Start a 3 container SolrCloud 5.2 and a 3 container Zookeeper 3.4.6 ensemble running:
 
-    ./startup-cluster.sh
-    
-This will:
+The script will output the list of container started, their ip addresses and ports. For example executing `startup.sh` will output:
 
-- Create 3 Zookeeper containers waiting for the configuration
-- Generate the configuration (zoo.cfg and ZKHOST env)
-- Start Zookeeper ensemble
+     Waiting for 'zookeeper' container startup: 10.1.0.50:2181 ... Done.
+
+     Starting container: 'solrcloud5-1' on port: 8081 ...
+
+     SolrCloud cluster ready:
+     10.1.0.51 solrcloud5-1
+
+    
+Start a 3 container SolrCloud 5.3 and a 3 container Zookeeper 3.4.6 ensemble running:
+
+    ./startup-cluster5x.sh
+    
+The script will output the list of container started, their ip addresses and ports. For example executing `startup-cluster5x.sh` will output:
+
+    
+    Starting container: zookeeper_1 (10.1.0.89) on port: 2182 ...
+    Starting container: zookeeper_2 (10.1.0.90) on port: 2183 ...
+    Starting container: zookeeper_3 (10.1.0.91) on port: 2184 ...
+    
+    Waiting for zookeeper startup... Done.
+    
+    Starting container: solrcloud5-1 (10.1.0.92) on port: 8081 ...
+    Starting container: solrcloud5-2 (10.1.0.93) on port: 8082 ...
+    Starting container: solrcloud5-3 (10.1.0.94) on port: 8083 ...
+    
+    SolrCloud cluster running!
+
+When a Zookeeper ensemble is created, every instance need to have a configuration file (zoo.cfg) where are listed (ip addresses, ports, etc.) all the ensemble instance's. 
+In other words, "Every machine that is part of the ZooKeeper ensemble should know about every other machine in the ensemble". 
+
+So, in detail, this will:
+
+- Create 3 Zookeeper containers waiting for the ensemble configuration.
+- Generate the configuration (zoo.cfg and ZKHOST environment for SolrCloud)
+- Start Zookeeper ensemble with the given configuration.
 - Create and start 3 SolrCloud containers linked to Zookeeper ensemble
 
 Zookeeper ensemble and SolrCloud can be exposed externally through ZKHOST env variable
+
 
