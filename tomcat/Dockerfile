@@ -10,6 +10,6 @@ RUN mkdir -p /opt/tomcat \
 
 # COPY apache-tomcat-7.0.61 /opt/tomcat
 
-RUN chown -R root:root /opt
+RUN chown -R root:root /opt && mkdir -p /opt/config
 
 EXPOSE 8080

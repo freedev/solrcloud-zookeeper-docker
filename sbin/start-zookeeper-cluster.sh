@@ -55,14 +55,14 @@ for ((i=1; i <= cluster_size ; i++)); do
     exit
   fi
 
-  $DOCKER_BIN run -d --name "${conf_prefix}${i}" \
+container_id=$(  $DOCKER_BIN run -d --name "${conf_prefix}${i}" \
         -p $ZKCLIENT_PORT:$ZKCLIENT_PORT \
         -p $ZKCLIENT_PORT1:$ZKCLIENT_PORT1 \
         -p $ZKCLIENT_PORT2:$ZKCLIENT_PORT2 \
 	-e ZOO_ID=${i} \
 	-e ZOO_LOG_DIR=/opt/persist/logs \
 	-e ZOO_DATADIR=/opt/persist/data \
-	-v "$HOST_DATA:/opt/persist" ${mantainer_name}/${container_name}
+	-v "$HOST_DATA:/opt/persist" ${mantainer_name}/${container_name} )
 done
 
 # initial default zoo.cfg

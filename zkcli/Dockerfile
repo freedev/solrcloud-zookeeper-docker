@@ -2,10 +2,10 @@ FROM freedev/solrcloud5-base
 
 MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 
-RUN apt-get -y update && \
-      apt-get -y install unzip && \
-      apt-get clean && \
-      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
+# RUN apt-get -y update && \
+#      apt-get -y install unzip && \
+#      apt-get clean && \
+#      rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*
 
 RUN mkdir -p /opt/zkcli 
 

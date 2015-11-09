@@ -64,7 +64,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
     exit
   fi
 
-  $DOCKER_BIN run -d \
+container_id=$(  $DOCKER_BIN run -d \
 	-e SOLR_PORT=${SOLR_PORT} \
 	-e SOLR_JAVA_MEM="-Xms512m -Xmx1536m" \
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" \
@@ -74,15 +74,18 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-v "$HOST_DATA_DIR/logs:/opt/tomcat/logs" \
 	-v "$HOST_DATA_DIR/store:/store" \
 	-p ${SOLR_PORT}:${SOLR_PORT} \
-	-p 8000:8000 \
 	--name "${SOLR_HOSTNAME}" \
-	${mantainer_name}/${container_name}
+	${mantainer_name}/${container_name} )
 
   container_ip=$($DOCKER_BIN inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
   line="${container_ip} ${SOLR_HOSTNAME}"
   HOSTS_CLUSTER="${HOSTS_CLUSTER}"$'\n'"${line}"$'\n'
 
+  echo "starting ${SOLR_HOSTNAME} in port ${SOLR_PORT}"
+
 done
+
+echo
 
 echo "SolrCloud cluster ready:"
 echo ${HOSTS_CLUSTER}

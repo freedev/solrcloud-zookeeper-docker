@@ -47,7 +47,7 @@ if [ ! -d ${HOST_DATA} ] ; then
 fi
 
 # start $DOCKER_BIN instance
-$DOCKER_BIN run -d --name "${conf_container}" \
+container_id=$( $DOCKER_BIN run -d --name "${conf_container}" \
 	-p 2181:2181 \
 	-p 2888:2888 \
 	-p 3888:3888 \
@@ -55,7 +55,7 @@ $DOCKER_BIN run -d --name "${conf_container}" \
 	-e ZOO_LOG_DIR=/opt/persist/logs \
 	-e ZOO_DATADIR=/opt/persist/data \
 	-e SERVER_JVMFLAGS="$ZK_JVMFLAGS" \
-	-v "$HOST_DATA:/opt/persist" ${mantainer_name}/$container_name
+	-v "$HOST_DATA:/opt/persist" ${mantainer_name}/$container_name )
 
 zkhost=""
 

@@ -25,8 +25,7 @@ fi
 
 if [ ! -f $ZK_CFG_FILE ]
 then
-        echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
-        exit
+        echo "Warning: $ZK_CFG_FILE not found. Have you started zookeeper?"
 fi
 
 while getopts ":c:C:p:h:z" opt; do
@@ -82,17 +81,17 @@ fi
 
 # Write the config to the config container
 
-$DOCKER_BIN run -d -v /opt/zookeeper/conf \
+ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
 	-v $WORK_PATH:/opt/conf \
 	-e ZKHOST=${zkhost} \
 	-e ZKCLI_CMD=$ZKCLI_CMD \
 	-e COLLECTION_PATH=/opt/conf \
 	-e COLLECTION_NAME=$COLLECTION_NAME \
-	${mantainer_name}/${container_name} > /tmp/$$.zkcli.tmp
+	${mantainer_name}/${container_name} )
 
-ZKCLI_CONTAINER_ID=$(cat /tmp/$$.zkcli.tmp)
+# ZKCLI_CONTAINER_ID=$(cat /tmp/$$.zkcli.tmp)
 
-rm /tmp/$$.zkcli.tmp
+# rm /tmp/$$.zkcli.tmp
 
 sleep 1
 
