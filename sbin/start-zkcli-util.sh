@@ -23,11 +23,6 @@ if [[ -z $IMAGE ]]; then
     fi
 fi
 
-if [ ! -f $ZK_CFG_FILE ]
-then
-        echo "Warning: $ZK_CFG_FILE not found. Have you started zookeeper?"
-fi
-
 while getopts ":c:C:p:h:z" opt; do
   case $opt in
     c)
@@ -49,6 +44,11 @@ while getopts ":c:C:p:h:z" opt; do
     z)
       zkhost=$(cat $ZKHOST_CFG_FILE)
       echo "config found in $ZKHOST_CFG_FILE : ${zkhost}" 
+	if [ ! -f $ZK_CFG_FILE ]
+	then
+		echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
+		exit
+	fi
       ;;
     \?)
       echo "Usage: $0 -c [upconfig|list|downconfig] -C collection_name -p /solrcloud/collection/config/path [-z|-h hostname:2181]"
