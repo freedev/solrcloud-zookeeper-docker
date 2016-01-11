@@ -9,8 +9,8 @@ SCRIPT_DIR=$(dirname $SCRIPT_PATH)
 if [ "$SCRIPT_DIR" == "$PWD" ]
 then
 	export SZD_HOME="$SCRIPT_DIR"
-	export ZK_CLUSTER_SIZE=3
-	export SOLRCLOUD_CLUSTER_SIZE=1
+	export ZK_CLUSTER_SIZE=1
+	export SOLRCLOUD_CLUSTER_SIZE=3
 	$SZD_HOME/sbin/common.sh
 	$SZD_HOME/sbin/start-zookeeper-standalone.sh
 	$SZD_HOME/sbin/start-solrcloud4-cluster.sh
