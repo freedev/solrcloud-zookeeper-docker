@@ -4,9 +4,6 @@ set -e
 mantainer_name=freedev
 container_name=solrcloud5
 
-#SOLR_HEAP=""
-SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
-
 if [ "A$SZD_HOME" == "A" ]
 then
         echo "ERROR: "\$SZD_HOME" environment variable not found!"
@@ -37,6 +34,9 @@ then
         echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
         exit
 fi
+
+#SOLR_HEAP=""
+SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
 # Start the solrcloud containers
 SOLR_PORT=8080
