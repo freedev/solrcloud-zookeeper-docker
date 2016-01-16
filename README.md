@@ -6,9 +6,9 @@ This project aims to help developers and newbies that would try solrcloud and zo
 
 If you want start a lightweight configuration: 1 SolrCloud container and 1 Zookeeper container, run:
 
-    ./startup.sh
+    ./start.sh
 
-The script will output the list of container started, their ip addresses and ports. For example executing `startup.sh` will output:
+The script will output the list of container started, their ip addresses and ports. For example executing `start.sh` will output:
 
      Waiting for 'zookeeper' container startup: 10.1.0.50:2181 ... Done.
 
@@ -20,9 +20,9 @@ The script will output the list of container started, their ip addresses and por
     
 Start a 3 container SolrCloud 5.3 and a 3 container Zookeeper 3.4.6 ensemble running:
 
-    ./startup-cluster5x.sh
+    ./start-cluster5x.sh
     
-The script will output the list of container started, their ip addresses and ports. For example executing `startup-cluster5x.sh` will output:
+The script will output the list of container started, their ip addresses and ports. For example executing `start-cluster5x.sh` will output:
 
     
     Starting container: zookeeper_1 (10.1.0.89) on port: 2182 ...
@@ -49,4 +49,19 @@ So, in detail, this will:
 
 Zookeeper ensemble and SolrCloud can be exposed externally through ZKHOST env variable
 
+# Boot
+An init.d start/stop script has been provided. Linking the script into `/etc/inid.d`:
+
+	export SZD_HOME=/home/ubuntu/solrcloud-zookeeper-docker
+    sudo ln -s $SZD_HOME/sbin/solrcloud-zookeeper-docker /etc/init.d/solrcloud-zookeeper-docker
+    
+Edit `solrcloud-zookeeper-docker` script and modify:
+
+	ZK_CLUSTER_SIZE=1
+	SOLRCLOUD_CLUSTER_SIZE=1
+    
+For Ubuntu you could configure start and stop in this way:
+    
+    sudo update-rc.d solrcloud-zookeeper-docker defaults
+    
 

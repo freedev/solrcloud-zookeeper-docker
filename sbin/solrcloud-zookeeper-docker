@@ -20,8 +20,12 @@ PATH="$PATH:$SZD_HOME/sbin"
 export SZD_HOME
 export PATH
 
+ZK_CLUSTER_SIZE=1
+export ZK_CLUSTER_SIZE
+
 SOLRCLOUD_CLUSTER_SIZE=1
 export SOLRCLOUD_CLUSTER_SIZE
+
 . $SZD_HOME/sbin/common.sh
 
 set -e
