@@ -1,0 +1,65 @@
+#! /bin/sh
+
+### BEGIN INIT INFO
+# Provides:          solrcloud-zookeeper-docker
+# Required-Start:    $local_fs $remote_fs
+# Required-Stop:
+# X-Start-Before:    rmnologin
+# Default-Start:     2 3 4 5
+# Default-Stop:
+# Short-Description: Start and stop solrcloud zookeeper instances
+# Description: Start and stop solrcloud zookeeper instances
+### END INIT INFO
+
+. /lib/lsb/init-functions
+
+N=/etc/init.d/solrcloud-zookeeper-docker
+
+SZD_HOME=/home/ubuntu/solrcloud-zookeeper-docker
+PATH="$PATH:$SZD_HOME/sbin"
+export SZD_HOME
+export PATH
+
+SOLRCLOUD_CLUSTER_SIZE=1
+export SOLRCLOUD_CLUSTER_SIZE
+. $SZD_HOME/sbin/common.sh
+
+set -e
+
+case "$1" in
+  start)
+        echo "Cleanup before start..."
+
+        $DOCKER_BIN ps -a -q | xargs -I{} $DOCKER_BIN rm {}
+
+        echo "Removing zoo.cfg..."
+        if [ -f $ZK_CFG_FILE ]
+        then
+                rm $ZK_CFG_FILE
+        fi
+
+        if [ -f ZKHOST_CFG_FILE ]
+        then
+                rm $ZKHOST_CFG_FILE
+        fi
+
+        echo Done
+	$SZD_HOME/sbin/start-zookeeper-standalone.sh
+	$SZD_HOME/sbin/start-solrcloud5-cluster.sh
+
+	;;
+  stop)
+        echo "..."
+        echo "Stopping..."
+        $DOCKER_BIN ps -q | xargs -I{} $DOCKER_BIN exec -i "{}" /stop-server.sh
+        echo "Done"
+	;;
+  reload|restart|force-reload|status)
+	;;
+  *)
+	echo "Usage: $N {start|stop|restart|force-reload|status}" >&2
+	exit 1
+	;;
+esac
+
+exit 0
