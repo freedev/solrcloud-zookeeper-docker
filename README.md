@@ -62,7 +62,7 @@ Edit `solrcloud-zookeeper-docker` script and modify:
 	ZK_CLUSTER_SIZE=1
 	SOLRCLOUD_CLUSTER_SIZE=1
     
-For Ubuntu you could configure start and stop in this way:
+Under Ubuntu you can configure boot start and stop in this way:
     
     sudo update-rc.d solrcloud-zookeeper-docker defaults
     
