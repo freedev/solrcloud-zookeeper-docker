@@ -4,8 +4,10 @@ docker-solrcloud-zookeeper
 This project aims to help developers and newbies that would try solrcloud and zookeeper in a docker environment.
 
 
-If you want start a lightweight configuration: 1 SolrCloud container and 1 Zookeeper container, run:
+If you want start a lightweight configuration: 1 SolrCloud container and 1 Zookeeper container, just run:
 
+	git clone https://github.com/freedev/solrcloud-zookeeper-docker.git
+	cd solrcloud-zookeeper-docker
     ./start.sh
 
 The script will output the list of container started, their ip addresses and ports. For example executing `start.sh` will output:
