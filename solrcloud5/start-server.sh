@@ -38,12 +38,18 @@ echo 'Waiting for hosts file to appear...'
 while [ ! -f /opt/config/hosts.cluster ] ; do
 	sleep 1
 done
+
 echo 'hosts file found, starting server.'
 cat /opt/config/hosts /opt/config/hosts.cluster > /etc/hosts
 rm /opt/config/hosts.cluster
+rm /opt/config/halt_solr_instance
 
-exec /opt/solr/bin/solr start -c -p $SOLR_PORT -z $ZKHOST -s $SOLR_DATA -h $SOLR_HOSTNAME -DhostPort=$SOLR_PORT >> $SOLR_LOG_DIR/solr-console.log 2>&1
+/opt/solr/bin/solr start -c -p $SOLR_PORT -z $ZKHOST -s $SOLR_DATA -h $SOLR_HOSTNAME -DhostPort=$SOLR_PORT >> $SOLR_LOG_DIR/solr-console.log 2>&1
+
+echo 'solr started'
 
 while [ ! -f /opt/config/halt_solr_instance ] ; do
 	sleep 1
 done
+
+echo 'exiting....'
