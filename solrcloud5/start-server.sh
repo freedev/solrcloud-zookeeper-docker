@@ -30,6 +30,14 @@ if [ -z "$SOLR_HEAP" ] && [ -n "$SOLR_JAVA_MEM" ]; then
 else
   SOLR_HEAP="${SOLR_HEAP:-512m}"
   JAVA_MEM_OPTS=("-Xms$SOLR_HEAP" "-Xmx$SOLR_HEAP")
+  export SOLR_HEAP
+  export JAVA_MEM_OPTS
+fi
+
+if [ -n "$LOG4J_PROPS" ]; then
+  echo "LOG4J_PROPS=\"$LOG4J_PROPS\"" >> /opt/solr/bin/solr.in.sh
+else
+  echo "LOG4J_PROPS=/opt/config/log4j.properties" >> /opt/solr/bin/solr.in.sh
 fi
 
 cp /etc/hosts /opt/config/hosts
@@ -46,7 +54,7 @@ rm /opt/config/halt_solr_instance
 
 /opt/solr/bin/solr start -c -p $SOLR_PORT -z $ZKHOST -s $SOLR_DATA -h $SOLR_HOSTNAME -DhostPort=$SOLR_PORT >> $SOLR_LOG_DIR/solr-console.log 2>&1
 
-echo 'solr started'
+echo 'solr started' >> $SOLR_LOG_DIR/solr-console.log 2>&1
 
 while [ ! -f /opt/config/halt_solr_instance ] ; do
 	sleep 1

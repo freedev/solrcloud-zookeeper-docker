@@ -22,6 +22,8 @@ RUN mkdir -p /opt/config
 
 ADD solr.xml /opt/config/solr.xml
 
+ADD log4j.properties /opt/config/log4j.properties
+
 # COPY *.jar /opt/solr-config/
 
 EXPOSE 8080 1616
