@@ -6,22 +6,26 @@ COPY conf /opt/tomcat/conf
 
 COPY lib /opt/tomcat/lib
 
+RUN mkdir -p /opt/bin
+
 ADD setenv.sh /opt/tomcat/bin/
 
-ADD start-server.sh /
+ADD start-server.sh /opt/bin
 
-RUN chmod +x /start-server.sh
+RUN chmod +x /opt/bin/start-server.sh
 
-ADD stop-server.sh /
+ADD stop-server.sh /opt/bin
 
-RUN chmod +x /stop-server.sh
+RUN chmod +x /opt/bin/stop-server.sh
 
-ADD kill-server.sh /
+ADD kill-server.sh /opt/bin
 
-RUN chmod +x /kill-server.sh
+RUN chmod +x /opt/bin/kill-server.sh
 
 ADD tomcat-users.xml /opt/tomcat/conf/
 
 EXPOSE 8080 1616
 
-CMD ["/start-server.sh"]
+ADD supervisord.conf /etc/supervisor/conf.d/supervisord.conf
+
+CMD ["/usr/bin/supervisord"]
