@@ -2,13 +2,9 @@
 
 set -e
 
-if [ "A$SZD_HOME" == "A" ]
-then
-	echo "ERROR: "\$SZD_HOME" environment variable not found!"
-	exit 1
-fi
+[ -z "$SZD_HOME" ] && echo "ERROR: "\$SZD_HOME" environment variable not found!" && exit 1;
 
-if [ "A$SZD_DATA_DIR" == "A" ]
+if [ -z "$SZD_DATA_DIR" ]
 then
 	export SZD_DATA_DIR=$SZD_HOME/data
 	if [ ! -d $SZD_HOME/data ]
