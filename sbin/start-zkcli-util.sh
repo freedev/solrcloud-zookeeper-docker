@@ -65,7 +65,7 @@ then
         exit 1
 fi
 
-if [ "$ZKCLI_CMD" != "upconfig" -a "$ZKCLI_CMD" != "downconfig" -a "$ZKCLI_CMD" != "list"  ]
+if [ "$ZKCLI_CMD" != "upconfig" -a "$ZKCLI_CMD" != "downconfig" -a "$ZKCLI_CMD" != "list" -a "$ZKCLI_CMD" != "clear"  ]
 then
 	echo "ERROR: $1 command not supported..."
 	exit 1
@@ -101,7 +101,7 @@ echo "--- $ZKCLI_HOSTNAME"
 
 echo "---"
 
-echo -n "Waiting for zookeeper upload..."
+echo -n "Waiting for zookeeper: $ZKCLI_CMD"
 while [ "A$( $DOCKER_BIN ps | grep $ZKCLI_HOSTNAME )" != "A" ] ; do echo -n "." ; sleep 1; done
 echo " done."
 
