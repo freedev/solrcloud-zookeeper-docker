@@ -23,45 +23,35 @@ if [[ -z $IMAGE ]]; then
     fi
 fi
 
-while getopts ":c:C:P:p:h:z" opt; do
-  case $opt in
-    c)
-	ZKCLI_CMD=$OPTARG
-      echo "zkCli command: $ZKCLI_CMD" >&2
-      ;;
-    C)
-        COLLECTION_NAME=$OPTARG
-      echo "collection: $COLLECTION_NAME" >&2
-      ;;
-    h)
-        zkhost=$OPTARG
-      echo "host: $zkhost" >&2
-      ;;
-    p)
-        WORK_PATH=$OPTARG
-      echo "path: $WORK_PATH" >&2
-      ;;
-    P)
-        ZKCMDPATH=$OPTARG
-      echo "zookeeper cmd path: $ZKCMDPATH" >&2
-      ;;
-    z)
-      zkhost=$(cat $ZKHOST_CFG_FILE)
-      echo "config found in $ZKHOST_CFG_FILE : ${zkhost}" 
-	if [ ! -f $ZK_CFG_FILE ]
-	then
-		echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
-		exit
-	fi
-      ;;
-    \?)
-      echo "Usage: $0 -c [upconfig|list|clear|downconfig] -C collection_name -p /local/collection/config/path [-z|-h hostname:2181] -P /configs/collection_name"
-      ;;
-    :)
-      echo "Invalid option: -$OPTARG" >&2
-      ;;
-  esac
+found_confdir=false
+
+for item in "${@:1}"
+do
+    collect_parameter=true
+    if [ "$found_confdir" == "true" ]
+    then
+       WORK_PATH="$item"
+       found_confdir=false
+       item="/opt/conf"
+    fi
+
+    if [ "$item" == "-confdir" ]
+    then
+      found_confdir=true
+    fi
+
+    if [ "$item" == "-d" ]
+    then
+      found_confdir=true
+    fi
+
+    if [ "$collect_parameter" == "true" ]
+    then
+       ZKCLI_PARAMS="$ZKCLI_PARAMS $item"
+    fi
 done
+
+echo $ZKCLI_PARAMS
 
 if [ "A$SZD_CONFIG_DIR" == "A" ]
 then
@@ -69,13 +59,7 @@ then
         exit 1
 fi
 
-if [ "$ZKCLI_CMD" != "upconfig" -a "$ZKCLI_CMD" != "downconfig" -a "$ZKCLI_CMD" != "list" -a "$ZKCLI_CMD" != "clear"  ]
-then
-	echo "ERROR: $1 command not supported..."
-	exit 1
-fi
-
-if [ "$ZKCLI_CMD" != "list" -a "$ZKCLI_CMD" != "clear"  ]
+if [ "A$WORK_PATH" != "A" ]
 then
 	WORK_PATH=$(readlink -f $WORK_PATH)
 
@@ -85,29 +69,20 @@ then
 		exit 1
 	fi
 
-	ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
-		-v $WORK_PATH:/opt/conf \
-		-e ZKHOST="${zkhost}" \
-		-e ZKCLI_CMD="$ZKCLI_CMD" \
-		-e COLLECTION_PATH="/opt/conf" \
-		-e COLLECTION_NAME="$COLLECTION_NAME" \
-		-e ZKCMDPATH="$ZKCMDPATH" \
-		${mantainer_name}/${container_name} )
+ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
+	-v $WORK_PATH:/opt/conf \
+	-e ZKCLI_PARAMS="$ZKCLI_PARAMS" \
+	${mantainer_name}/${container_name} )
 
 else
-	ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
-		-e ZKHOST="${zkhost}" \
-		-e ZKCLI_CMD="$ZKCLI_CMD" \
-		-e ZKCMDPATH="$ZKCMDPATH" \
-		${mantainer_name}/${container_name} )
+
+ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
+	-e ZKCLI_PARAMS="$ZKCLI_PARAMS" \
+	${mantainer_name}/${container_name} )
 
 fi
 
 # Write the config to the config container
-
-# ZKCLI_CONTAINER_ID=$(cat /tmp/$$.zkcli.tmp)
-
-# rm /tmp/$$.zkcli.tmp
 
 sleep 1
 

@@ -1,8 +1,8 @@
 #!/bin/bash
 
-if [ "$ZKCLI_CMD" != "list" -a "$ZKCLI_CMD" != "clear" ]
+if [ "A$ZKCLI_PARAMS" != "A" ]
 then
-	/opt/solr/server/scripts/cloud-scripts/zkcli.sh -zkhost $ZKHOST -cmd $ZKCLI_CMD -confdir $COLLECTION_PATH -n $COLLECTION_NAME
+	/opt/solr/server/scripts/cloud-scripts/zkcli.sh $ZKCLI_PARAMS
 else
-	/opt/solr/server/scripts/cloud-scripts/zkcli.sh -zkhost $ZKHOST -cmd $ZKCLI_CMD $ZKCMDPATH
+	echo "Error: ZKCLI_PARAMS missing"
 fi
