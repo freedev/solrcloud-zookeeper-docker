@@ -24,6 +24,7 @@ if [[ -z $IMAGE ]]; then
 fi
 
 found_confdir=false
+found_cmd=false
 
 for item in "${@:1}"
 do
@@ -33,6 +34,17 @@ do
        WORK_PATH="$item"
        found_confdir=false
        item="/opt/conf"
+    fi
+
+    if [ "$found_cmd" == "true" ]
+    then
+       ZKCLI_CMD="$item"
+       found_cmd=false
+    fi
+
+    if [ "$item" == "--cmd" ]
+    then
+      found_cmd=true
     fi
 
     if [ "$item" == "-confdir" ]
@@ -92,7 +104,7 @@ echo "--- $ZKCLI_HOSTNAME"
 
 echo "---"
 
-echo -n "Waiting for zookeeper: $ZKCLI_CMD"
+echo -n "Waiting for execution of cmd: $ZKCLI_CMD .."
 while [ "A$( $DOCKER_BIN ps | grep $ZKCLI_HOSTNAME )" != "A" ] ; do echo -n "." ; sleep 1; done
 echo " done."
 
