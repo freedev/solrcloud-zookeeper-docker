@@ -23,7 +23,7 @@ if [[ -z $IMAGE ]]; then
     fi
 fi
 
-while getopts ":c:C:p:h:z" opt; do
+while getopts ":c:C:P:p:h:z" opt; do
   case $opt in
     c)
 	ZKCLI_CMD=$OPTARG
@@ -41,6 +41,10 @@ while getopts ":c:C:p:h:z" opt; do
         WORK_PATH=$OPTARG
       echo "path: $WORK_PATH" >&2
       ;;
+    P)
+        ZKCMDPATH=$OPTARG
+      echo "zookeeper cmd path: $ZKCMDPATH" >&2
+      ;;
     z)
       zkhost=$(cat $ZKHOST_CFG_FILE)
       echo "config found in $ZKHOST_CFG_FILE : ${zkhost}" 
@@ -51,7 +55,7 @@ while getopts ":c:C:p:h:z" opt; do
 	fi
       ;;
     \?)
-      echo "Usage: $0 -c [upconfig|list|downconfig] -C collection_name -p /solrcloud/collection/config/path [-z|-h hostname:2181]"
+      echo "Usage: $0 -c [upconfig|list|clear|downconfig] -C collection_name -p /local/collection/config/path [-z|-h hostname:2181] -P /configs/collection_name"
       ;;
     :)
       echo "Invalid option: -$OPTARG" >&2
@@ -71,23 +75,35 @@ then
 	exit 1
 fi
 
-WORK_PATH=$(readlink -f $WORK_PATH)
-
-if [ ! -d "$WORK_PATH" ]
+if [ "$ZKCLI_CMD" != "list" -a "$ZKCLI_CMD" != "clear"  ]
 then
-	echo "ERROR: $WORK_PATH is not a directory or cannot be found..."
-	exit 1
+	WORK_PATH=$(readlink -f $WORK_PATH)
+
+	if [ ! -d "$WORK_PATH" ]
+	then
+		echo "ERROR: $WORK_PATH is not a directory or cannot be found..."
+		exit 1
+	fi
+
+	ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
+		-v $WORK_PATH:/opt/conf \
+		-e ZKHOST="${zkhost}" \
+		-e ZKCLI_CMD="$ZKCLI_CMD" \
+		-e COLLECTION_PATH="/opt/conf" \
+		-e COLLECTION_NAME="$COLLECTION_NAME" \
+		-e ZKCMDPATH="$ZKCMDPATH" \
+		${mantainer_name}/${container_name} )
+
+else
+	ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
+		-e ZKHOST="${zkhost}" \
+		-e ZKCLI_CMD="$ZKCLI_CMD" \
+		-e ZKCMDPATH="$ZKCMDPATH" \
+		${mantainer_name}/${container_name} )
+
 fi
 
 # Write the config to the config container
-
-ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
-	-v $WORK_PATH:/opt/conf \
-	-e ZKHOST=${zkhost} \
-	-e ZKCLI_CMD=$ZKCLI_CMD \
-	-e COLLECTION_PATH=/opt/conf \
-	-e COLLECTION_NAME=$COLLECTION_NAME \
-	${mantainer_name}/${container_name} )
 
 # ZKCLI_CONTAINER_ID=$(cat /tmp/$$.zkcli.tmp)
 
