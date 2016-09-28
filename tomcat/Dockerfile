@@ -5,7 +5,7 @@ MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 # ADD tomcat.tar.gz /opt
 
 RUN mkdir -p /opt/tomcat \
-    && curl -SL http://mirror.nohup.it/apache/tomcat/tomcat-7/v7.0.68/bin/apache-tomcat-7.0.68.tar.gz \
+    && curl -SL http://archive.apache.org/dist/tomcat/tomcat-7/v7.0.72/bin/apache-tomcat-7.0.72.tar.gz \
     | tar -xz -C /opt/tomcat --strip-components=1
 
 # COPY apache-tomcat-7.0.61 /opt/tomcat
