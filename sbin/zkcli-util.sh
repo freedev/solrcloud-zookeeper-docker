@@ -73,7 +73,22 @@ fi
 
 if [ "A$WORK_PATH" != "A" ]
 then
-	WORK_PATH=$(readlink -f $WORK_PATH)
+
+case "$OSTYPE" in
+  solaris*) echo "SOLARIS" ;;
+  darwin*)  
+     echo "OSX"
+     WORK_PATH=$( cd "$(dirname "$WORK_PATH")" ; pwd -P )
+     echo $WORK_PATH
+     ;;
+  linux*)   
+     echo "LINUX" 
+     WORK_PATH=$(readlink -f $WORK_PATH)
+      ;;
+  bsd*)     echo "BSD" ;;
+  *)        echo "unknown: $OSTYPE" ;;
+esac
+	WORK_PATH=$WORK_PATH
 
 	if [ ! -d "$WORK_PATH" ]
 	then
