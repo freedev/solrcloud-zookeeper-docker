@@ -78,7 +78,7 @@ case "$OSTYPE" in
   solaris*) echo "SOLARIS" ;;
   darwin*)  
      echo "OSX"
-     WORK_PATH=$( cd "$(dirname "$WORK_PATH")" ; pwd -P )
+     WORK_PATH=$( cd "$WORK_PATH" ; pwd -P )
      echo $WORK_PATH
      ;;
   linux*)   
