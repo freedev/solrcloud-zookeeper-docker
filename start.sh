@@ -26,7 +26,7 @@ then
 	export SOLRCLOUD_CLUSTER_SIZE=1
 	bash $SZD_HOME/sbin/common.sh
 	bash $SZD_HOME/sbin/start-zookeeper-standalone.sh
-	bash $SZD_HOME/sbin/start-solrcloud5-cluster.sh
+	bash $SZD_HOME/sbin/start-solrcloud-cluster.sh
 else
 	echo ""
 	echo "execute:"
