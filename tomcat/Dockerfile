@@ -1,4 +1,4 @@
-FROM freedev/java8
+FROM freedev/unix-utils
 
 MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 

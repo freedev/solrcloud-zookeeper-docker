@@ -1,4 +1,4 @@
-FROM debian:jessie
+FROM openjdk:8
 
 MAINTAINER Vincenzo D'Amore <v.damore@gmail.com>
 

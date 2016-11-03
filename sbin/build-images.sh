@@ -12,7 +12,7 @@ fi
 
 $DOCKER_BIN build -t ${mantainer_name}/unix-utils ../unix-utils/
 
-$DOCKER_BIN build -t ${mantainer_name}/java8 ../java8/
+# $DOCKER_BIN build -t ${mantainer_name}/java8 ../java8/
 
 $DOCKER_BIN build -t ${mantainer_name}/zookeeper ../zookeeper/
 
