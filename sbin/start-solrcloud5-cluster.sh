@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -e
-mantainer_name=freedev
-container_name=solrcloud5
+container_name=solr
+container_version=6.2.1
 
 if [ "A$SZD_HOME" == "A" ]
 then
@@ -12,13 +12,13 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
+IMAGE=$($DOCKER_BIN images | grep "${container_name} " | grep "${container_version} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    $DOCKER_BIN pull ${mantainer_name}/${container_name}
+    $DOCKER_BIN pull ${container_name}:${container_version}
     rc=$?
     if [[ $rc != 0 ]]
     then
-            echo "${container_name} image not found... Did you run 'build-images.sh' ?"
+            echo "${container_name}:${container_version} image not found..."
             exit $rc
     fi
 fi
@@ -29,9 +29,9 @@ then
         exit
 fi
 
-if [ ! -f $ZK_CFG_FILE ]
+if [ ! -f $ZKHOST_CFG_FILE ]
 then
-        echo "Error: $ZK_CFG_FILE not found. Have you started zookeeper?"
+        echo "Error: $ZKHOST_CFG_FILE not found. Have you started zookeeper?"
         exit
 fi
 
@@ -40,8 +40,9 @@ SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
 # Start the solrcloud containers
 SOLR_PORT=8080
+SOLR_INTERNAL_PORT=8983
 HOST_PREFIX=${container_name}-
-ZKHOST=$(cat $ZKHOST_CFG_FILE)
+ZK_HOST=$(cat $ZKHOST_CFG_FILE)
 HOSTS_CLUSTER='
 '
 
@@ -62,17 +63,26 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
     exit
   fi
 
+  if [ ! -f ${HOST_DATA_DIR}/store/solr/solr.xml ] ; then
+    cp $SZD_HOME/template/solrcloud5/solr.xml ${HOST_DATA_DIR}/store/solr/solr.xml
+  fi
+
+  if [ ! -f ${HOST_DATA_DIR}/store/solr/solr.xml ] ; then
+    echo "Error: ${HOST_DATA_DIR}/store/solr/solr.xml not found "
+    exit
+  fi
+
   container_id=$(  $DOCKER_BIN run -d \
 	-v "$HOST_DATA_DIR/logs:/opt/logs" \
 	-v "$HOST_DATA_DIR/store:/store" \
-	-e SOLR_DATA=/store/solr \
-	-e SOLR_LOG_DIR=/opt/logs \
-	-e ZKHOST=${ZKHOST} \
-	-e SOLR_PORT=${SOLR_PORT} -p ${SOLR_PORT}:${SOLR_PORT} \
+	-e SOLR_HOME=/store/solr \
+	-e SOLR_LOGS_DIR=/opt/logs \
+	-e ZK_HOST=${ZK_HOST} \
+	-p ${SOLR_PORT}:${SOLR_INTERNAL_PORT} \
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" --name "${SOLR_HOSTNAME}" \
 	-e SOLR_HEAP="$SOLR_HEAP" \
 	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
-	${mantainer_name}/${container_name}  )
+	${container_name}:${container_version}  )
 
   container_ip=$($DOCKER_BIN inspect --format '{{.NetworkSettings.IPAddress}}' ${SOLR_HOSTNAME})
   line="${container_ip} ${SOLR_HOSTNAME}"
