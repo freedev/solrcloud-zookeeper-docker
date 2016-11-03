@@ -1,6 +1,6 @@
 <?xml version='1.0' encoding='UTF-8'?>
 <solr>
-  <str name='sharedLib'>/opt/shared-lib</str>
+  <str name='sharedLib'>/store/shared-lib</str>
  
   <solrcloud>
       <str name="host">${host:}</str>

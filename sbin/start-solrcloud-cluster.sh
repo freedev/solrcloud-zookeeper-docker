@@ -56,6 +56,9 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   if [ ! -d ${HOST_DATA_DIR} ] ; then
     mkdir -p ${HOST_DATA_DIR}/logs
     mkdir -p ${HOST_DATA_DIR}/store/solr
+    mkdir -p ${HOST_DATA_DIR}/store/shared-lib
+    cp -r $SZD_HOME/templates/solr/docker-entrypoint-initdb.d ${HOST_DATA_DIR}/
+    cp $SZD_HOME/templates/solr/solr.xml ${HOST_DATA_DIR}/store/solr/solr.xml
   fi
 
   if [ ! -d ${HOST_DATA_DIR} ] ; then
@@ -64,22 +67,20 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   fi
 
   if [ ! -f ${HOST_DATA_DIR}/store/solr/solr.xml ] ; then
-    cp $SZD_HOME/template/solrcloud5/solr.xml ${HOST_DATA_DIR}/store/solr/solr.xml
-  fi
-
-  if [ ! -f ${HOST_DATA_DIR}/store/solr/solr.xml ] ; then
     echo "Error: ${HOST_DATA_DIR}/store/solr/solr.xml not found "
     exit
   fi
 
   container_id=$(  $DOCKER_BIN run -d \
+  --name "${SOLR_HOSTNAME}" \
 	-v "$HOST_DATA_DIR/logs:/opt/logs" \
 	-v "$HOST_DATA_DIR/store:/store" \
+	-v "$HOST_DATA_DIR/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d" \
 	-e SOLR_HOME=/store/solr \
 	-e SOLR_LOGS_DIR=/opt/logs \
 	-e ZK_HOST=${ZK_HOST} \
 	-p ${SOLR_PORT}:${SOLR_INTERNAL_PORT} \
-	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" --name "${SOLR_HOSTNAME}" \
+	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" \
 	-e SOLR_HEAP="$SOLR_HEAP" \
 	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
 	${container_name}:${container_version}  )
@@ -98,10 +99,10 @@ echo "SolrCloud cluster running!"
 echo
 echo ${HOSTS_CLUSTER}
 
-for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
-    SOLR_HOSTNAME=${HOST_PREFIX}${i}
-    echo "${HOSTS_CLUSTER}" | $DOCKER_BIN exec -i ${SOLR_HOSTNAME} bash -c 'cat > /opt/config/hosts.cluster'
-done
+# for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
+#     SOLR_HOSTNAME=${HOST_PREFIX}${i}
+#     echo "${HOSTS_CLUSTER}" | $DOCKER_BIN exec -i ${SOLR_HOSTNAME} bash -c 'cat > /opt/config/hosts.cluster'
+# done
 
 echo
 
