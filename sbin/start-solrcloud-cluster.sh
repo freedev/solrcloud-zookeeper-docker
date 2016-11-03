@@ -35,7 +35,7 @@ then
         exit
 fi
 
-#SOLR_HEAP=""
+SOLR_HEAP=""
 SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
 # Start the solrcloud containers
@@ -79,7 +79,8 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 	-e SOLR_HOME=/store/solr \
 	-e SOLR_LOGS_DIR=/opt/logs \
 	-e ZK_HOST=${ZK_HOST} \
-	-p ${SOLR_PORT}:${SOLR_INTERNAL_PORT} \
+	-e SOLR_PORT=${SOLR_PORT} \
+	-p ${SOLR_PORT}:${SOLR_PORT} \
 	-e SOLR_HOSTNAME="${SOLR_HOSTNAME}" \
 	-e SOLR_HEAP="$SOLR_HEAP" \
 	-e SOLR_JAVA_MEM="$SOLR_JAVA_MEM" \
