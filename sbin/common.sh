@@ -29,6 +29,8 @@ fi
 
 export DOCKER_BIN="sudo docker"
 
+export DOCKER_COMPOSE_BIN="sudo docker-compose"
+
 export ZK_CLUSTER_SIZE=${ZK_CLUSTER_SIZE:-3}
 
 export ZK_JVMFLAGS="-Xms512m -Xmx2048m"
