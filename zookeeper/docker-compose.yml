@@ -11,12 +11,8 @@ services:
             ZOO_MY_ID: 1
             ZOO_PORT: 2181
             ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
-            ZOO_DATA_LOG_DIR: /opt/persist/logs
             ZOO_LOG_DIR: /opt/persist/logs
             ZOO_DATADIR: /opt/persist/data
-        expose:
-          - "2181"
-
     zoo-2:
         image: zookeeper
         restart: always
@@ -28,12 +24,8 @@ services:
             ZOO_MY_ID: 2
             ZOO_PORT: 2182
             ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
-            ZOO_DATA_LOG_DIR: /opt/persist/logs
             ZOO_LOG_DIR: /opt/persist/logs
             ZOO_DATADIR: /opt/persist/data
-        expose:
-          - "2182"
-
     zoo-3:
         image: zookeeper
         restart: always
@@ -45,8 +37,5 @@ services:
             ZOO_MY_ID: 3
             ZOO_PORT: 2183
             ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
-            ZOO_DATA_LOG_DIR: /opt/persist/logs
             ZOO_LOG_DIR: /opt/persist/logs
             ZOO_DATADIR: /opt/persist/data
-        expose:
-          - "2183"

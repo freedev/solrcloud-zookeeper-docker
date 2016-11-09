@@ -28,5 +28,5 @@ done
 
 echo "..."
 echo "Stopping..."
-$DOCKER_BIN ps -q | xargs -I{} $DOCKER_BIN stop "{}"
+$DOCKER_BIN ps -q | grep solrcloud | xargs -I{} $DOCKER_BIN stop "{}"
 echo "Done"
