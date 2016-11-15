@@ -1,31 +1,19 @@
 #!/bin/bash
 
-set -x
 set -e
 
-APP="solrcloud"
-ZK_CLUSTER_SIZE=3
-SOLRCLOUD_CLUSTER_SIZE=3
+if [ "A$SZD_HOME" == "A" ]
+then
+        echo "ERROR: "\$SZD_HOME" environment variable not found!"
+        exit 1
+fi
 
-[ -z "$SZD_HOME" ] && echo "ERROR: "\$SZD_HOME" environment variable not found!" && exit 1;
+. $SZD_HOME/sbin/common.sh
 
-export DOCKER_BIN="sudo docker"
-export DOCKER_COMPOSE_BIN="sudo docker-compose"
-
-# check if zookeeper and solr container images are present 
-
-s_container_name=solr
-s_container_version=6.2.1
-
-IMAGE=$($DOCKER_BIN images | grep "${s_container_name} " | grep "${s_container_version} " |  awk '{print $3}')
-if [[ -z $IMAGE ]]; then
-    $DOCKER_BIN pull ${s_container_name}:${s_container_version}
-    rc=$?
-    if [[ $rc != 0 ]]
-    then
-            echo "${s_container_name}:${s_container_version} image not found..."
-            exit $rc
-    fi
+if [ "A$SZD_CONFIG_DIR" == "A" ]
+then
+        echo "Error: common.sh not loaded"
+        exit
 fi
 
 z_container_name=zookeeper
@@ -42,11 +30,7 @@ if [[ -z $IMAGE ]]; then
     fi
 fi
 
-# create data dir for each cluster node 
-
-SZD_DATA_DIR=$SZD_HOME/$APP/data
-
-export ZKHOST_CFG_FILE=$SZD_DATA_DIR/zkhost.cfg
+SZD_DATA_DIR=$SZD_HOME/solrcloud/data
 
 # Need a volume to read the config from
 conf_prefix=zoo-
@@ -69,13 +53,30 @@ for ((i=1; i <= cluster_size ; i++)); do
 
 done
 
+s_container_name=solr
+s_container_version=6.2.1
+
+IMAGE=$($DOCKER_BIN images | grep "${s_container_name} " | grep "${s_container_version} " |  awk '{print $3}')
+if [[ -z $IMAGE ]]; then
+    $DOCKER_BIN pull ${s_container_name}:${s_container_version}
+    rc=$?
+    if [[ $rc != 0 ]]
+    then
+            echo "${s_container_name}:${s_container_version} image not found..."
+            exit $rc
+    fi
+fi
+
 SOLR_HEAP=""
 SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
 # Start the solrcloud containers
+SOLR_PORT=8080
 HOST_PREFIX=${s_container_name}-
 
 for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
+
+  SOLR_PORT=$((SOLR_PORT+1))
 
   SOLR_HOSTNAME=${HOST_PREFIX}${i}
   HOST_DATA_DIR=$SZD_DATA_DIR/${SOLR_HOSTNAME}
@@ -104,19 +105,9 @@ echo
 echo -n "Waiting for cluster and ensemble startup... "
 echo
 
-NETWORK=$($DOCKER_BIN network ls | grep "${APP}_default" |  awk '{print $1}')
-if [[ -z $NETWORK ]]; then
-    $DOCKER_BIN network create ${APP}_default
-    rc=$?
-    if [[ $rc != 0 ]]
-    then
-            echo "unable to create network ${APP}_default"
-            exit $rc
-    fi
-fi
-
-$DOCKER_COMPOSE_BIN -f $SZD_HOME/$APP/docker-compose.yml create
-$DOCKER_COMPOSE_BIN -f $SZD_HOME/$APP/docker-compose.yml start
+$DOCKER_BIN network create solrcloud_default
+$DOCKER_COMPOSE_BIN -f $SZD_HOME/solrcloud/docker-compose.yml create
+$DOCKER_COMPOSE_BIN -f $SZD_HOME/solrcloud/docker-compose.yml start
 
 echo
 echo
@@ -125,7 +116,7 @@ echo
 ZKCLIENT_PORT=2181
 
 zkhost=""
-conf_prefix=$APP_zoo-
+conf_prefix=solrcloud_zoo-
 
 # Look up the zookeeper instance IPs
 for ((i=1; i <= cluster_size ; i++)); do
@@ -149,12 +140,13 @@ SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
 
 # Start the solrcloud containers
 SOLR_PORT=8080
+SOLR_INTERNAL_PORT=8983
 HOST_PREFIX=${s_container_name}-
 
 for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 
   SOLR_PORT=$((SOLR_PORT+1))
-  SOLR_HOSTNAME=$APP_${HOST_PREFIX}${i}_1
+  SOLR_HOSTNAME=solrcloud_${HOST_PREFIX}${i}_1
 
   line="localhost ${SOLR_HOSTNAME}"
 

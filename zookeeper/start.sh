@@ -3,30 +3,15 @@
 set -x
 set -e
 
-APP="solrcloud"
+APP="zookeeper"
 ZK_CLUSTER_SIZE=3
-SOLRCLOUD_CLUSTER_SIZE=3
 
 [ -z "$SZD_HOME" ] && echo "ERROR: "\$SZD_HOME" environment variable not found!" && exit 1;
 
 export DOCKER_BIN="sudo docker"
 export DOCKER_COMPOSE_BIN="sudo docker-compose"
 
-# check if zookeeper and solr container images are present 
-
-s_container_name=solr
-s_container_version=6.2.1
-
-IMAGE=$($DOCKER_BIN images | grep "${s_container_name} " | grep "${s_container_version} " |  awk '{print $3}')
-if [[ -z $IMAGE ]]; then
-    $DOCKER_BIN pull ${s_container_name}:${s_container_version}
-    rc=$?
-    if [[ $rc != 0 ]]
-    then
-            echo "${s_container_name}:${s_container_version} image not found..."
-            exit $rc
-    fi
-fi
+# check if zookeeper container images are present 
 
 z_container_name=zookeeper
 z_container_version=3.4.9
@@ -69,39 +54,8 @@ for ((i=1; i <= cluster_size ; i++)); do
 
 done
 
-SOLR_HEAP=""
-SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
-
-# Start the solrcloud containers
-HOST_PREFIX=${s_container_name}-
-
-for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
-
-  SOLR_HOSTNAME=${HOST_PREFIX}${i}
-  HOST_DATA_DIR=$SZD_DATA_DIR/${SOLR_HOSTNAME}
-
-  if [ ! -d ${HOST_DATA_DIR} ] ; then
-    mkdir -p ${HOST_DATA_DIR}/logs
-    mkdir -p ${HOST_DATA_DIR}/store/solr
-    mkdir -p ${HOST_DATA_DIR}/store/shared-lib
-    cp -r $SZD_HOME/templates/solr/docker-entrypoint-initdb.d ${HOST_DATA_DIR}/
-    cp $SZD_HOME/templates/solr/solr.xml ${HOST_DATA_DIR}/store/solr/solr.xml
-  fi
-
-  if [ ! -d ${HOST_DATA_DIR} ] ; then
-    echo "Error: unable to create "$HOST_DATA_DIR
-    exit
-  fi
-
-  if [ ! -f ${HOST_DATA_DIR}/store/solr/solr.xml ] ; then
-    echo "Error: ${HOST_DATA_DIR}/store/solr/solr.xml not found "
-    exit
-  fi
-
-done
-
 echo
-echo -n "Waiting for cluster and ensemble startup... "
+echo -n "Waiting for ensemble startup... "
 echo
 
 NETWORK=$($DOCKER_BIN network ls | grep "${APP}_default" |  awk '{print $1}')
@@ -144,30 +98,9 @@ echo "${zkhost}"
 echo "Ensemble ready."
 echo
 
-SOLR_HEAP=""
-SOLR_JAVA_MEM=$SOLRCLOUD_JVMFLAGS
-
 # Start the solrcloud containers
-SOLR_PORT=8080
-HOST_PREFIX=${s_container_name}-
-
-for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
-
-  SOLR_PORT=$((SOLR_PORT+1))
-  SOLR_HOSTNAME=$APP_${HOST_PREFIX}${i}_1
-
-  line="localhost ${SOLR_HOSTNAME}"
-
-  echo "Starting container: ${SOLR_HOSTNAME} (localhost) on port: ${SOLR_PORT} ..."
-
-done
-
 echo
 
-echo "SolrCloud cluster running!"
+echo "Zookeeper enseble running!"
 echo
-echo ${HOSTS_CLUSTER}
-
-echo try connecting to http://localhost:8081/solr
-
 

@@ -22,17 +22,13 @@ SCRIPT_DIR=$(dirname $SCRIPT_PATH)
 
 if [ "$SCRIPT_PATH" == "$PWD" ]
 then
-  export SZD_HOME="$SCRIPT_PATH"
-	$SZD_HOME/sbin/common.sh
-  $SZD_HOME/sbin/stop-zookeeper-ensemble.sh
-	$SZD_HOME/sbin/stop-all.sh
-	sleep 5
-	$SZD_HOME/sbin/remove-all.sh
+	export SZD_HOME="$SCRIPT_PATH"
+	bash $SZD_HOME/solrcloud/start.sh
 else
 	echo ""
 	echo "execute:"
 	echo ""
-	echo "  cd "$SCRIPT_DIR
+	echo "  cd "$SCRIPT_PATH
 	echo "  ./"$SCRIPT_NAME
 	echo ""
 fi

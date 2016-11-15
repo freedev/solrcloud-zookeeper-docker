@@ -1,8 +1,8 @@
 #!/bin/bash
 
 set -e
-mantainer_name=freedev
-container_name=zkcli
+container_name=solr
+container_version=6.2.1
 
 if [ "A$SZD_HOME" == "A" ]
 then
@@ -12,9 +12,9 @@ fi
 
 . $SZD_HOME/sbin/common.sh
 
-IMAGE=$($DOCKER_BIN images | grep "${mantainer_name}/${container_name} " |  awk '{print $3}')
+IMAGE=$($DOCKER_BIN images | grep "${container_name}" | grep "${container_version} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
-    $DOCKER_BIN pull ${mantainer_name}/${container_name}
+    $DOCKER_BIN pull ${container_name}:${container_version}
     rc=$?
     if [[ $rc != 0 ]]
     then
@@ -65,12 +65,6 @@ done
 
 echo $ZKCLI_PARAMS
 
-if [ "A$SZD_CONFIG_DIR" == "A" ]
-then
-        echo "Error: common.sh not loaded"
-        exit 1
-fi
-
 if [ "A$WORK_PATH" != "A" ]
 then
 
@@ -96,18 +90,11 @@ esac
 		exit 1
 	fi
 
-ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
-	-v $WORK_PATH:/opt/conf \
-	-e ZKCLI_PARAMS="$ZKCLI_PARAMS" \
-	${mantainer_name}/${container_name} )
-
-else
-
-ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d -v /opt/zookeeper/conf \
-	-e ZKCLI_PARAMS="$ZKCLI_PARAMS" \
-	${mantainer_name}/${container_name} )
-
 fi
+
+ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d  \
+	-v $WORK_PATH:/opt/conf \
+	${container_name}:${container_version} /opt/solr/server/scripts/cloud-scripts/zkcli.sh $ZKCLI_PARAMS )
 
 # Write the config to the config container
 
