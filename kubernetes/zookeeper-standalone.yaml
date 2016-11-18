@@ -1,0 +1,41 @@
+apiVersion: extensions/v1beta1
+kind: Deployment
+metadata:
+  name: zookeeper-standalone
+spec:
+  replicas: 1
+  template:
+    metadata:
+      labels:
+        app: zookeeper-standalone
+    spec:
+      containers:
+      - name: zookeeper-standalone
+        image: zookeeper:3.4.9
+        ports:
+        - containerPort: 2181
+        volumeMounts:
+        - name: zookeeper-standalone-data
+          mountPath: /opt/persist
+        env:
+          - name: ZOO_DATA_LOG_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-standalone-configmap
+                key: ZOO_DATA_LOG_DIR
+          - name: ZOO_LOG_DIR
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-standalone-configmap
+                key: ZOO_LOG_DIR
+          - name: ZOO_DATADIR
+            valueFrom:
+              configMapKeyRef:
+                name: zookeeper-standalone-configmap
+                key: ZOO_DATADIR
+          - name: ZOO_ID
+            value: "1"
+      volumes:
+        - name: zookeeper-standalone-data
+          hostPath:
+            path: /store/zookeeper-standalone

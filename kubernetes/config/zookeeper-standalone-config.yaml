@@ -1,0 +1,10 @@
+kind: ConfigMap
+apiVersion: v1
+metadata:
+  creationTimestamp: 2016-02-18T19:14:38Z
+  name: zookeeper-standalone-configmap
+  namespace: default
+data:
+  ZOO_DATA_LOG_DIR: /opt/persist/logs
+  ZOO_LOG_DIR: /opt/persist/logs
+  ZOO_DATADIR: /opt/persist/data
