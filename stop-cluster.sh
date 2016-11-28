@@ -23,7 +23,7 @@ SCRIPT_DIR=$(dirname $SCRIPT_PATH)
 if [ "$SCRIPT_PATH" == "$PWD" ]
 then
 	export SZD_HOME="$SCRIPT_PATH"
-	bash $SZD_HOME/solrcloud-3-node-zookeeper-3-nodes/stop.sh
+	bash $SZD_HOME/solrcloud-3-nodes-zookeeper-ensemble/stop.sh
 else
 	echo ""
 	echo "execute:"
