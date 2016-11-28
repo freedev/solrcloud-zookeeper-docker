@@ -23,11 +23,7 @@ SCRIPT_DIR=$(dirname $SCRIPT_PATH)
 if [ "$SCRIPT_PATH" == "$PWD" ]
 then
 	export SZD_HOME="$SCRIPT_PATH"
-	export SOLRCLOUD_CLUSTER_SIZE=1
-	$SZD_HOME/sbin/common.sh
-	$SZD_HOME/sbin/stop-all.sh
-	sleep 5
-	$SZD_HOME/sbin/remove-all.sh
+	bash $SZD_HOME/solrcloud/stop.sh
 else
 	echo ""
 	echo "execute:"
