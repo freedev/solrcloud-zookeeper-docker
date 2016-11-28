@@ -1,6 +1,46 @@
 #!/bin/bash
 
 set -e
+
+export DOCKER_BIN="sudo docker"
+
+export DOCKER_COMPOSE_BIN="sudo docker-compose"
+
+
+function my_readlink() {
+  case "$OSTYPE" in
+    solaris*) echo "SOLARIS" ;;
+    darwin*)
+       echo $( cd "$1" ; pwd -P )
+       ;;
+    linux*)
+       echo $(readlink -f $1)
+        ;;
+    bsd*)     echo "BSD" ;;
+    *)        echo "unknown: $OSTYPE" ;;
+  esac
+}
+
+PWD=$(pwd)
+PWD_PATH=$(my_readlink $PWD)
+SCRIPT_PATH=$(my_readlink $(dirname "$0"))
+SCRIPT_NAME=$(basename "$0")
+SCRIPT_DIR=$(dirname $SCRIPT_PATH)
+
+if [ "$SCRIPT_PATH" == "$PWD" ]
+then
+  export SZD_HOME="$SCRIPT_PATH"
+else
+  echo ""
+  echo "execute:"
+  echo ""
+  echo "  cd "$SCRIPT_PATH
+  echo "  ./"$SCRIPT_NAME
+  echo ""
+  exit
+fi
+
+
 container_name=solr
 container_version=6.2.1
 
@@ -9,8 +49,6 @@ then
         echo "ERROR: "\$SZD_HOME" environment variable not found!"
         exit 1
 fi
-
-. $SZD_HOME/sbin/common.sh
 
 IMAGE=$($DOCKER_BIN images | grep "${container_name}" | grep "${container_version} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
