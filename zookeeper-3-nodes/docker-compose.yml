@@ -1,0 +1,41 @@
+version: '2'
+services:
+    zoo-1:
+        image: zookeeper
+        restart: always
+        ports:
+          - "2181:2181"
+        volumes:
+            - ./data/zoo-1:/opt/persist
+        environment:
+            ZOO_MY_ID: 1
+            ZOO_PORT: 2181
+            ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
+            ZOO_LOG_DIR: /opt/persist/logs
+            ZOO_DATADIR: /opt/persist/data
+    zoo-2:
+        image: zookeeper
+        restart: always
+        ports:
+          - "2182:2182"
+        volumes:
+            - ./data/zoo-2:/opt/persist
+        environment:
+            ZOO_MY_ID: 2
+            ZOO_PORT: 2182
+            ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
+            ZOO_LOG_DIR: /opt/persist/logs
+            ZOO_DATADIR: /opt/persist/data
+    zoo-3:
+        image: zookeeper
+        restart: always
+        ports:
+          - "2183:2183"
+        volumes:
+            - ./data/zoo-3:/opt/persist
+        environment:
+            ZOO_MY_ID: 3
+            ZOO_PORT: 2183
+            ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
+            ZOO_LOG_DIR: /opt/persist/logs
+            ZOO_DATADIR: /opt/persist/data
