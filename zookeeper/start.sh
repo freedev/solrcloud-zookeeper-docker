@@ -1,6 +1,6 @@
 #!/bin/bash
 
-set -x
+# set -x
 set -e
 
 function my_readlink() {
@@ -22,7 +22,7 @@ PWD_PATH=$(my_readlink $PWD)
 SCRIPT_PATH=$(my_readlink $(dirname "$0"))
 APP=$(basename $SCRIPT_PATH)
 
-ZK_CLUSTER_SIZE=3
+ZK_CLUSTER_SIZE=1
 
 [ -z "$SZD_HOME" ] && echo "ERROR: "\$SZD_HOME" environment variable not found!" && exit 1;
 
