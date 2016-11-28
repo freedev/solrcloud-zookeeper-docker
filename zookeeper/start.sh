@@ -3,7 +3,25 @@
 set -x
 set -e
 
-APP="zookeeper"
+function my_readlink() {
+  case "$OSTYPE" in
+    solaris*) echo "SOLARIS" ;;
+    darwin*)
+       echo $( cd "$1" ; pwd -P )
+       ;;
+    linux*)
+       echo $(readlink -f $1)
+        ;;
+    bsd*)     echo "BSD" ;;
+    *)        echo "unknown: $OSTYPE" ;;
+  esac
+}
+
+PWD=$(pwd)
+PWD_PATH=$(my_readlink $PWD)
+SCRIPT_PATH=$(my_readlink $(dirname "$0"))
+APP=$(basename $SCRIPT_PATH)
+
 ZK_CLUSTER_SIZE=3
 
 [ -z "$SZD_HOME" ] && echo "ERROR: "\$SZD_HOME" environment variable not found!" && exit 1;
@@ -58,9 +76,11 @@ echo
 echo -n "Waiting for ensemble startup... "
 echo
 
-NETWORK=$($DOCKER_BIN network ls | grep "${APP}_default" |  awk '{print $1}')
+NETWORK_NAME="${APP//-}_default"
+
+NETWORK=$($DOCKER_BIN network ls | grep "${NETWORK_NAME}" |  awk '{print $1}')
 if [[ -z $NETWORK ]]; then
-    $DOCKER_BIN network create ${APP}_default
+    $DOCKER_BIN network create ${NETWORK_NAME}
     rc=$?
     if [[ $rc != 0 ]]
     then
