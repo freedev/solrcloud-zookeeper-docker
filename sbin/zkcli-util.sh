@@ -68,6 +68,12 @@ echo $ZKCLI_PARAMS
 if [ "A$WORK_PATH" != "A" ]
 then
 
+if [ ! -d "$WORK_PATH" ]
+then
+	echo "ERROR: $WORK_PATH is not a directory or cannot be found..."
+	exit 1
+fi
+
 case "$OSTYPE" in
   solaris*) echo "SOLARIS" ;;
   darwin*)  
@@ -82,19 +88,18 @@ case "$OSTYPE" in
   bsd*)     echo "BSD" ;;
   *)        echo "unknown: $OSTYPE" ;;
 esac
-	WORK_PATH=$WORK_PATH
 
-	if [ ! -d "$WORK_PATH" ]
-	then
-		echo "ERROR: $WORK_PATH is not a directory or cannot be found..."
-		exit 1
-	fi
+WORK_PATH=$WORK_PATH
 
+if [ ! -d "$WORK_PATH" ]
+then
+	echo "ERROR: $WORK_PATH is not a directory or cannot be found..."
+	exit 1
 fi
 
 ZKCLI_CONTAINER_ID=$( $DOCKER_BIN run -d  \
-	-v $WORK_PATH:/opt/conf \
-	${container_name}:${container_version} /opt/solr/server/scripts/cloud-scripts/zkcli.sh $ZKCLI_PARAMS )
+	  -v $WORK_PATH:/opt/conf \
+	  ${container_name}:${container_version} /opt/solr/server/scripts/cloud-scripts/zkcli.sh $ZKCLI_PARAMS )
 
 # Write the config to the config container
 
@@ -112,3 +117,9 @@ echo " done."
 
 $DOCKER_BIN logs $ZKCLI_HOSTNAME
 $DOCKER_BIN rm $ZKCLI_HOSTNAME
+
+else
+  echo "WORK_PATH: $WORK_PATH not found."
+
+fi
+

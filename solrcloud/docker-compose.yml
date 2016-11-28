@@ -10,33 +10,6 @@ services:
         environment:
             ZOO_MY_ID: 1
             ZOO_PORT: 2181
-            ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
-            ZOO_LOG_DIR: /opt/persist/logs
-            ZOO_DATADIR: /opt/persist/data
-    zoo-2:
-        image: zookeeper
-        restart: always
-        ports:
-          - "2182:2182"
-        volumes:
-            - ./data/zoo-2:/opt/persist
-        environment:
-            ZOO_MY_ID: 2
-            ZOO_PORT: 2182
-            ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
-            ZOO_LOG_DIR: /opt/persist/logs
-            ZOO_DATADIR: /opt/persist/data
-    zoo-3:
-        image: zookeeper
-        restart: always
-        ports:
-          - "2183:2183"
-        volumes:
-            - ./data/zoo-3:/opt/persist
-        environment:
-            ZOO_MY_ID: 3
-            ZOO_PORT: 2183
-            ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
             ZOO_LOG_DIR: /opt/persist/logs
             ZOO_DATADIR: /opt/persist/data
     solr-1:
@@ -51,42 +24,10 @@ services:
         environment:
             SOLR_PORT: 8081
             SOLR_HOME: /store/solr
-            ZK_HOST: zoo-1:2181,zoo-2:2182,zoo-3:2183
+            ZK_HOST: zoo-1:2181
             SOLR_LOGS_DIR: /opt/logs
-            SOLR_HOSTNAME: solrcloud-1
+            SOLR_HOSTNAME: solr-1
             SOLR_HEAP:
             SOLR_JAVA_MEM:
-    solr-2:
-        image: solr
-        restart: always
-        ports:
-            - 8082:8082
-        volumes:
-            - ./data/solr-2/logs:/opt/logs
-            - ./data/solr-2/store:/store
-            - ./data/solr-2/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-        environment:
-            SOLR_PORT: 8082
-            SOLR_HOME: /store/solr
-            ZK_HOST: zoo-1:2181,zoo-2:2182,zoo-3:2183
-            SOLR_LOGS_DIR: /opt/logs
-            SOLR_HOSTNAME: solrcloud-2
-            SOLR_HEAP:
-            SOLR_JAVA_MEM:
-    solr-3:
-        image: solr
-        restart: always
-        ports:
-            - 8083:8083
-        volumes:
-            - ./data/solr-3/logs:/opt/logs
-            - ./data/solr-3/store:/store
-            - ./data/solr-3/docker-entrypoint-initdb.d:/docker-entrypoint-initdb.d
-        environment:
-            SOLR_PORT: 8083
-            SOLR_HOME: /store/solr
-            ZK_HOST: zoo-1:2181,zoo-2:2182,zoo-3:2183
-            SOLR_LOGS_DIR: /opt/logs
-            SOLR_HOSTNAME: solrcloud-3
-            SOLR_HEAP:
-            SOLR_JAVA_MEM:
+        depends_on:
+          - zoo-1
