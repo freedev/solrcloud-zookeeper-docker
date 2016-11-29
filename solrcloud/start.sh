@@ -28,15 +28,13 @@ echo $APP
 ZK_CLUSTER_SIZE=3
 SOLRCLOUD_CLUSTER_SIZE=3
 
-[ -z "$SZD_HOME" ] && echo "ERROR: "\$SZD_HOME" environment variable not found!" && exit 1;
-
 export DOCKER_BIN="sudo docker"
 export DOCKER_COMPOSE_BIN="sudo docker-compose"
 
 # check if zookeeper and solr container images are present 
 
 s_container_name=solr
-s_container_version=6.2.1
+s_container_version=latest
 
 IMAGE=$($DOCKER_BIN images | grep "${s_container_name} " | grep "${s_container_version} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
@@ -50,7 +48,7 @@ if [[ -z $IMAGE ]]; then
 fi
 
 z_container_name=zookeeper
-z_container_version=3.4.9
+z_container_version=latest
 
 IMAGE=$($DOCKER_BIN images | grep "${z_container_name}" | grep "${z_container_version} " |  awk '{print $3}')
 if [[ -z $IMAGE ]]; then
@@ -67,12 +65,9 @@ fi
 
 SZD_DATA_DIR=$SZD_HOME/$APP/data
 
-export ZKHOST_CFG_FILE=$SZD_DATA_DIR/zkhost.cfg
-
 # Need a volume to read the config from
 conf_prefix=zoo-
 conf_container=${conf_prefix}1
-
 cluster_size=$ZK_CLUSTER_SIZE
 
 for ((i=1; i <= cluster_size ; i++)); do
