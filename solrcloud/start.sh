@@ -25,8 +25,8 @@ APP=$(basename $SCRIPT_PATH)
 
 echo $APP
 
-ZK_CLUSTER_SIZE=3
-SOLRCLOUD_CLUSTER_SIZE=3
+ZK_CLUSTER_SIZE=1
+SOLRCLOUD_CLUSTER_SIZE=1
 
 export DOCKER_BIN="sudo docker"
 export DOCKER_COMPOSE_BIN="sudo docker-compose"
@@ -154,8 +154,6 @@ for ((i=1; i <= cluster_size ; i++)); do
   zkhost="${zkhost}localhost:$ZKCLIENT_PORT"
   ZKCLIENT_PORT=$((ZKCLIENT_PORT+1))
 done
-
-echo "${zkhost}" > $ZKHOST_CFG_FILE
 
 echo "ZOO_SERVERS: ${zkhost}" 
 
