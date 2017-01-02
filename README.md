@@ -35,26 +35,24 @@ Start a 3 container SolrCloud and a 3 container Zookeeper ensemble running:
     
 The script will output the list of container started, their ip addresses and ports. For example executing `start-cluster5x.sh` will output:
 
-   [...]
-   Starting zoo-2 ... done
-   Starting zoo-3 ... done
-   Starting zoo-1 ... done
-   Starting solr-1 ... done
-   Starting solr-3 ... done
-   Starting solr-2 ... done
-   
-   
-   ZOO_SERVERS: localhost:2181,localhost:2182,localhost:2183
-   Ensemble ready.
-   
-   Starting container: solr-1_1 (localhost) on port: 8081 ...
-   Starting container: solr-2_1 (localhost) on port: 8082 ...
-   Starting container: solr-3_1 (localhost) on port: 8083 ...
-   
-   SolrCloud cluster running!
-   
-   
-   try connecting to http://localhost:8081/solr
+    [...]
+    Starting zoo-2 ... done
+    Starting zoo-3 ... done
+    Starting zoo-1 ... done
+    Starting solr-1 ... done
+    Starting solr-3 ... done
+    Starting solr-2 ... done
+
+    ZOO_SERVERS: localhost:2181,localhost:2182,localhost:2183
+    Ensemble ready.
+
+    Starting container: solr-1_1 (localhost) on port: 8081 ...
+    Starting container: solr-2_1 (localhost) on port: 8082 ...
+    Starting container: solr-3_1 (localhost) on port: 8083 ...
+
+    SolrCloud cluster running!
+
+    try connecting to http://localhost:8081/solr
 
 
 When a Zookeeper ensemble is created, every instance need to have a configuration file (zoo.cfg) where are listed (ip addresses, ports, etc.) all the ensemble instance's. 
