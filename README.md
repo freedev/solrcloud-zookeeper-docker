@@ -33,7 +33,7 @@ Start a 3 container SolrCloud and a 3 container Zookeeper ensemble running:
 
     ./start-cluster.sh
     
-The script will output the list of container started, their ip addresses and ports. For example executing `start-cluster5x.sh` will output:
+The script will output the list of container started, their ip addresses and ports. For example executing `start-cluster.sh` will output:
 
     [...]
     Starting zoo-2 ... done
