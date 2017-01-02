@@ -21,7 +21,7 @@ If you want start a lightweight configuration with 1 SolrCloud container and 1 Z
 
 The script will output the list of container started, their ip addresses and ports. For example executing `start.sh` will output:
 
-   [...]
+    [...]
     ZOO_SERVERS: localhost:2181
     Ensemble ready.
 
