@@ -3,7 +3,7 @@ solrcloud-zookeeper-docker
 
 This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Docker environment.
 
-Here a  new version is entirely based on the newerSolr and Zookeeper official images. 
+Here a  new version is entirely based on the newer Solr and Zookeeper official images. 
 
 First version of this project was written when there weren't official images for Solr, Zookeeper and even Java 8. So it had its own images for every dependency. Finally there are official images for almost everything.
 
