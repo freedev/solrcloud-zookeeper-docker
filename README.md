@@ -5,7 +5,7 @@ This project aims to help developers and newbies that would try latest version o
 
 Here a  new version is entirely based on the newer Solr and Zookeeper official images. 
 
-First version of this project was written when there weren't official images for Solr, Zookeeper and even Java 8. So it had its own images for every dependency. Finally there are official images for almost everything.
+First version of this project was written when there weren't official images for Solr, Zookeeper and even Java 8. So it had its own images for every dependency. Finally there are official images for almost everything, so I have re-build everything from the ground up using docker-compose and official images.
 
 Prerequisite
 
