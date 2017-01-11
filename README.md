@@ -55,13 +55,14 @@ The script will output the list of container started, their ip addresses and por
     try connecting to http://localhost:8081/solr
 
 
-When a Zookeeper ensemble is created, every instance need to have a configuration file (zoo.cfg) where are listed (ip addresses, ports, etc.) all the ensemble instance's. 
-In other words, "Every machine that is part of the ZooKeeper ensemble should know about every other machine in the ensemble". 
+Given that: "Every machine that is part of the ZooKeeper ensemble should know about every other machine in the ensemble". 
 
 So, in detail, this will:
 
-- Create 3 Zookeeper containers waiting for the ensemble configuration.
-- Generate the configuration (zoo.cfg and ZKHOST environment for SolrCloud)
+- enter the directory solrcloud-3-nodes-zookeeper-ensemble
+- generate the zookeeper configuration as environment variable
+- execute docker-compose
+- Create 3 Zookeeper containers and 3 Solr containers
 - Start Zookeeper ensemble with the given configuration.
 - Create and start 3 SolrCloud containers linked to Zookeeper ensemble
 
