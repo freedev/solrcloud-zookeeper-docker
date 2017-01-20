@@ -71,7 +71,7 @@ So when a cluster starts, in detail, this script will:
 If you want connect your clients to SolrCloud or want read by Zookeeper ensemble and SolrCloud can be exposed externally through ZKHOST env variable
 
 # Boot
-In order to help someone that want restart all the container automatically with Linux at every boot, an init.d start/stop script has been provided. 
+In order to help who want restart all the container automatically with Linux at every boot, an init.d start/stop script has been provided. 
 
 You should link the script into `/etc/inid.d`:
 
