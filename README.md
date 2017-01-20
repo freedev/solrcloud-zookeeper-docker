@@ -3,17 +3,19 @@ solrcloud-zookeeper-docker
 
 This project aims to help developers and newbies that would try latest version of SolrCloud (and Zookeeper) in a Docker environment.
 
-Here a  new version is entirely based on the newer Solr and Zookeeper official images. 
+This version is entirely based on the newer Solr and Zookeeper official images. 
 
-First version of this project was written when there weren't official images for Solr, Zookeeper and even Java 8. So it had its own images for every dependency. Finally there are official images for almost everything, so I have re-build everything from the ground up using docker-compose and official images.
+Hence the first version of this project was written when there wasn't docker-compose and there weren't official images for Solr, Zookeeper and even Java 8. So the project had its own images for every piece of the architecture and had to create the docker network in order to start a zookeeper ensemble. 
+
+Finally there official images are ready for almost everything, so I have re-build this project from the ground up using docker-compose and official images.
 
 Prerequisite
 
  * Mac-OS or Linux environment
- * Docker lastest version - https://docs.docker.com/compose/install/
+ * Docker lastest version - https://docs.docker.com/engine/installation/
  * Docker-Compose latest version - https://docs.docker.com/compose/install/
 
-If you want start a lightweight configuration with 1 SolrCloud container and 1 Zookeeper container, just run:
+If you want try a lightweight configuration with 1 SolrCloud container and 1 Zookeeper container, just run:
 
   	git clone https://github.com/freedev/solrcloud-zookeeper-docker.git
     cd solrcloud-zookeeper-docker
