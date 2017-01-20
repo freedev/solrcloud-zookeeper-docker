@@ -59,7 +59,7 @@ The script will output the list of container started, their ip addresses and por
 
 Given that: "Every machine that is part of the ZooKeeper ensemble should know about every other machine in the ensemble". 
 
-So, in detail, this will:
+So when a cluster starts, in detail, this script will:
 
 - enter the directory solrcloud-3-nodes-zookeeper-ensemble
 - generate the zookeeper configuration as environment variable
@@ -68,18 +68,20 @@ So, in detail, this will:
 - Start Zookeeper ensemble with the given configuration.
 - Create and start 3 SolrCloud containers linked to Zookeeper ensemble
 
-Zookeeper ensemble and SolrCloud can be exposed externally through ZKHOST env variable
+If you want connect your clients to SolrCloud or want read by Zookeeper ensemble and SolrCloud can be exposed externally through ZKHOST env variable
 
 # Boot
-An init.d start/stop script has been provided. Linking the script into `/etc/inid.d`:
+In order to help someone that want restart all the container automatically with Linux at every boot, an init.d start/stop script has been provided. 
 
-	export SZD_HOME=/home/ubuntu/solrcloud-zookeeper-docker
+You should link the script into `/etc/inid.d`:
+
+	  export SZD_HOME=/home/ubuntu/solrcloud-zookeeper-docker
     sudo ln -s $SZD_HOME/sbin/solrcloud-zookeeper-docker /etc/init.d/solrcloud-zookeeper-docker
     
 Edit `solrcloud-zookeeper-docker` script and modify:
 
-	ZK_CLUSTER_SIZE=1
-	SOLRCLOUD_CLUSTER_SIZE=1
+    ZK_CLUSTER_SIZE=1
+    SOLRCLOUD_CLUSTER_SIZE=1
     
 Under Ubuntu you can configure boot start and stop in this way:
     
