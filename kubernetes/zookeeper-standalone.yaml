@@ -28,11 +28,11 @@ spec:
               configMapKeyRef:
                 name: zookeeper-standalone-configmap
                 key: ZOO_LOG_DIR
-          - name: ZOO_DATADIR
+          - name: ZOO_DATA_DIR
             valueFrom:
               configMapKeyRef:
                 name: zookeeper-standalone-configmap
-                key: ZOO_DATADIR
+                key: ZOO_DATA_DIR
           - name: ZOO_ID
             value: "1"
       volumes:

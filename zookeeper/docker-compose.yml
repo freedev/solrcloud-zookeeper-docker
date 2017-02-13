@@ -11,4 +11,4 @@ services:
             ZOO_MY_ID: 1
             ZOO_PORT: 2181
             ZOO_LOG_DIR: /opt/persist/logs
-            ZOO_DATADIR: /opt/persist/data
+            ZOO_DATA_DIR: /opt/persist/data

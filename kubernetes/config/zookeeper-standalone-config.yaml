@@ -5,6 +5,5 @@ metadata:
   name: zookeeper-standalone-configmap
   namespace: default
 data:
-  ZOO_DATA_LOG_DIR: /opt/persist/logs
   ZOO_LOG_DIR: /opt/persist/logs
-  ZOO_DATADIR: /opt/persist/data
+  ZOO_DATA_DIR: /opt/persist/data
