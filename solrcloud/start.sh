@@ -102,6 +102,7 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
     mkdir -p ${HOST_DATA_DIR}/store/shared-lib
     cp -r $SZD_HOME/templates/solr/docker-entrypoint-initdb.d ${HOST_DATA_DIR}/
     cp $SZD_HOME/templates/solr/solr.xml ${HOST_DATA_DIR}/store/solr/solr.xml
+    chmod -R ugo+rw ${HOST_DATA_DIR}
   fi
 
   if [ ! -d ${HOST_DATA_DIR} ] ; then
@@ -115,8 +116,6 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
   fi
 
 done
-
-chmod -R ugo+rw ${SZD_DATA_DIR}
 
 echo
 echo -n "Waiting for cluster and ensemble startup... "
