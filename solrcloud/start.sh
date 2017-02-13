@@ -116,6 +116,8 @@ for ((i=1; i <= SOLRCLOUD_CLUSTER_SIZE ; i++)); do
 
 done
 
+chmod -R +rw ${SZD_DATA_DIR}
+
 echo
 echo -n "Waiting for cluster and ensemble startup... "
 echo
