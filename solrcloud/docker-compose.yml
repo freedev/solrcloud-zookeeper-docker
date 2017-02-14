@@ -11,7 +11,7 @@ services:
             ZOO_MY_ID: 1
             ZOO_PORT: 2181
             ZOO_LOG_DIR: /opt/persist/logs
-            ZOO_DATA_DIR: /opt/persist/data
+            ZOO_DATA_LOG_DIR: /opt/persist/data
     solr-1:
         image: solr
         restart: always
