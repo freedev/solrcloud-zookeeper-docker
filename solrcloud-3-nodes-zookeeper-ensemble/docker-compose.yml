@@ -12,7 +12,7 @@ services:
             ZOO_PORT: 2181
             ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
             ZOO_LOG_DIR: /opt/persist/logs
-            ZOO_DATA_DIR: /opt/persist/data
+            ZOO_DATA_LOG_DIR: /opt/persist/data
     zoo-2:
         image: zookeeper
         restart: always
@@ -25,7 +25,7 @@ services:
             ZOO_PORT: 2182
             ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
             ZOO_LOG_DIR: /opt/persist/logs
-            ZOO_DATA_DIR: /opt/persist/data
+            ZOO_DATA_LOG_DIR: /opt/persist/data
     zoo-3:
         image: zookeeper
         restart: always
@@ -38,7 +38,7 @@ services:
             ZOO_PORT: 2183
             ZOO_SERVERS: server.1=zoo-1:2888:3888 server.2=zoo-2:2888:3888 server.3=zoo-3:2888:3888
             ZOO_LOG_DIR: /opt/persist/logs
-            ZOO_DATA_DIR: /opt/persist/data
+            ZOO_DATA_LOG_DIR: /opt/persist/data
     solr-1:
         image: solr
         restart: always
