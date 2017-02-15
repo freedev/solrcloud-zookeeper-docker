@@ -20,8 +20,8 @@ SCRIPT_PATH=$(my_readlink $(dirname "$0"))
 SCRIPT_NAME=$(basename "$0")
 SCRIPT_DIR=$(dirname $SCRIPT_PATH)
 
-command -v docker >/dev/null 2>&1 || { echo >&2 "I require docker but it's not installed. \n\n  https://docs.docker.com/engine/installation/ \n\n "; exit 1; }
-command -v docker-compose >/dev/null 2>&1 || { echo >&2 "I require docker-compose but it's not installed. \n\n https://docs.docker.com/compose/install/ \n\n "; exit 1; }
+command -v docker >/dev/null 2>&1 || { echo -e >&2 "Error: docker it's not installed. \n\n  https://docs.docker.com/engine/installation/ \n\n "; exit 1; }
+command -v docker-compose >/dev/null 2>&1 || { echo -e >&2 "Error: docker-compose it's not installed. \n\n https://docs.docker.com/compose/install/ \n\n "; exit 1; }
 
 
 if [ "$SCRIPT_PATH" == "$PWD" ]
