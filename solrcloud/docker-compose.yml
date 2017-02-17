@@ -26,7 +26,7 @@ services:
             SOLR_HOME: /store/solr
             ZK_HOST: zoo-1:2181
             SOLR_LOGS_DIR: /opt/logs
-            SOLR_HOSTNAME: solr-1
+            SOLR_HOST: solr-1
             SOLR_HEAP:
             SOLR_JAVA_MEM:
         depends_on:
