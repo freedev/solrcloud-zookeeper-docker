@@ -11,7 +11,7 @@ This version of this project is entirely based on the newer Solr and Zookeeper o
  * Docker lastest version - https://docs.docker.com/engine/installation/
  * Docker-Compose latest version - https://docs.docker.com/compose/install/
 
-## Start
+## Quick start
 
 If you want try a lightweight configuration with 1 SolrCloud container and 1 Zookeeper container, just run:
 
@@ -28,6 +28,8 @@ The script will output the list of container started, their ip addresses and por
     Starting container: solr-1_1 (localhost) on port: 8081 ...
 
     SolrCloud cluster running!
+
+## Start your SolrCloud cluster
     
 Start a 3 container SolrCloud and a 3 container Zookeeper ensemble running:
 
@@ -54,7 +56,7 @@ The script will output the list of container started, their ip addresses and por
 
     try connecting to http://localhost:8081/solr
 
-
+## Note about Zookeeper configuration
 Given that: "Every machine that is part of the ZooKeeper ensemble should know about every other machine in the ensemble". 
 
 So when a cluster starts, in detail, this script will:
