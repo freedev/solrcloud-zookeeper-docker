@@ -5,13 +5,13 @@ This project aims to help developers and newbies that would try latest version o
 
 This version of this project is entirely based on the newer Solr and Zookeeper official images. 
 
-# Prerequisite
+## Prerequisite
 
  * Mac-OS or Linux environment
  * Docker lastest version - https://docs.docker.com/engine/installation/
  * Docker-Compose latest version - https://docs.docker.com/compose/install/
 
-# Start
+## Start
 
 If you want try a lightweight configuration with 1 SolrCloud container and 1 Zookeeper container, just run:
 
