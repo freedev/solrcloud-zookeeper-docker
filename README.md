@@ -56,6 +56,20 @@ The script will output the list of container started, their ip addresses and por
 
     try connecting to http://localhost:8081/solr
 
+## How to move your standalone Solr to SolrCloud
+
+1. copy your lib/*.jar files into /home/eduardo/git/solrcloud-zookeeper-docker/solrcloud/data/solr-1/store/shared-lib.
+
+2. upload the collection configuration into Zookeeper.
+To upload the configuration just use zkcli-util.sh.
+You'll find zkcli-util.sh into /home/eduardo/git/solrcloud-zookeeper-docker.
+After this go into the Solr Admin and have a look at http://localhost:8081/solr/#/~cloud?view=tree
+And double check zookeeper /config/ folder, there you should see your configuration.
+
+3. Create your collection (may be using Collections API).
+
+4. Now can load your documents into the fresh collection. Theoretically, at this point, if your standalone version of Solr is the same of SolrCloud, given you're using the same version of Lucene indexes you could try to brutally copy the index data. But first you have to shutdown SolrCloud.
+
 ## Note about Zookeeper configuration
 Given that: "Every machine that is part of the ZooKeeper ensemble should know about every other machine in the ensemble". 
 
