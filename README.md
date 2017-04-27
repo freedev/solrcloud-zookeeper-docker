@@ -66,7 +66,7 @@ You'll find zkcli-util.sh into `solrcloud-zookeeper-docker`.
 After this go into the Solr Admin and have a look at http://localhost:8081/solr/#/~cloud?view=tree
 And double check zookeeper /config/ folder, there you should see your configuration.
 
-3. Create your collection (may be using [Collections API](https://cwiki.apache.org/confluence/display/solr/Collections+API)).
+3. Create your collection (may be using [Collections API - CREATE](https://cwiki.apache.org/confluence/display/solr/Collections+API#CollectionsAPI-CREATE:CreateaCollection)).
 
 4. Now can load your documents into the fresh collection. Theoretically, at this point, if your standalone version of Solr is the same of SolrCloud, given you're using the same version of Lucene indexes you could try to brutally copy the index data. But first you have to shutdown SolrCloud.
 
