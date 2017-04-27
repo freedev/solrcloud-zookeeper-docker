@@ -58,16 +58,14 @@ The script will output the list of container started, their ip addresses and por
 
 ## How to move your standalone Solr to SolrCloud
 
-1. copy your `lib/*.jar` files into `solrcloud-zookeeper-docker/solrcloud/data/solr-1/store/shared-lib`.
+1. (Optional step) Copy your `lib/*.jar` files into `solrcloud-zookeeper-docker/solrcloud/data/solr-1/store/shared-lib`.
 
-2. upload the collection configuration into Zookeeper.
-To upload the configuration just use zkcli-util.sh.
-You'll find zkcli-util.sh into `solrcloud-zookeeper-docker`.
+2. Upload the collection configuration into Zookeeper. To upload the configuration just use `zkcli-util.sh`. You'll find `zkcli-util.sh` into `solrcloud-zookeeper-docker`.
 
-    ./zkcli-util.sh --cmd upconfig -confname collection1 -confdir /path/to/collection1/conf/ -zkhost 127.0.0.1:2181
+    `./zkcli-util.sh --cmd upconfig -confname collection1 -confdir /path/to/collection1/conf/ -zkhost 127.0.0.1:2181`
 
 3. Go into the Solr Admin and have a look at http://localhost:8081/solr/#/~cloud?view=tree<br>
-And double check zookeeper /config/ folder, there you should see your configuration.
+And double check zookeeper `/config/` folder, there you should see your configuration.
 
 4. Create your collection (for example using [Collections API - CREATE](https://cwiki.apache.org/confluence/display/solr/Collections+API#CollectionsAPI-CREATE:CreateaCollection)).
 
