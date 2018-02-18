@@ -128,7 +128,7 @@ if [[ -z $NETWORK ]]; then
     fi
 fi
 
-$DOCKER_COMPOSE_BIN -f $SZD_HOME/$APP/docker-compose.yml create
+$DOCKER_COMPOSE_BIN -f $SZD_HOME/$APP/docker-compose.yml up --no-start
 $DOCKER_COMPOSE_BIN -f $SZD_HOME/$APP/docker-compose.yml start
 
 echo
