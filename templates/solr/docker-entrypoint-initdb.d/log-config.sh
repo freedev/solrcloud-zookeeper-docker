@@ -5,6 +5,9 @@ mv /opt/solr/bin/solr.in.sh /opt/solr/bin/solr.in.sh.orig
 
 env | grep SOLR > /opt/solr/bin/solr.in.sh
 
-cp /opt/solr/server/resources/log4j.properties /opt/solr/server/resources/log4j.properties.orig
-cp /docker-entrypoint-initdb.d/log4j.properties /opt/solr/server/resources/
+if [ -f /opt/solr/server/resources/log4j.properties ]
+then
+  cp /opt/solr/server/resources/log4j.properties /opt/solr/server/resources/log4j.properties.orig
+  cp /docker-entrypoint-initdb.d/log4j.properties /opt/solr/server/resources/
+fi
 
